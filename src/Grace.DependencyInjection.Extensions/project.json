@@ -1,0 +1,16 @@
+{
+  "version": "1.0.0-*",
+  "dependencies": {
+    "Grace": "4.0.0-rc3-44",
+    "Microsoft.Extensions.DependencyInjection.Abstractions": "1.0.0-rc2-final"
+  },
+  "frameworks": {
+    "netcoreapp1.0": {
+      "imports": [
+        "dotnet5.6",
+        "dnxcore50",
+        "portable-net45+win8"
+      ]
+    }
+  }
+}
