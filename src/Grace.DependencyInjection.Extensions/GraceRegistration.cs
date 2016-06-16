@@ -9,17 +9,35 @@ namespace Grace.DependencyInjection.Extensions
 {
     public static class GraceRegistration
     {
+        /// <summary>
+        /// Populate a container with service descriptors
+        /// </summary>
+        /// <param name="exportLocator">export locator</param>
+        /// <param name="descriptors">descriptors</param>
+        /// <param name="registrationDelegate">allows you to specify registration into child container (usually null)</param>
         public static void Populate(
                 IExportLocator exportLocator,
-                IEnumerable<ServiceDescriptor> descriptors)
+                IEnumerable<ServiceDescriptor> descriptors,
+                ExportRegistrationDelegate registrationDelegate = null)
         {
-            exportLocator.Configure(c =>
+            if (registrationDelegate == null)
             {
-                c.Export<GraceServiceProvider>().As<IServiceProvider>();
-                c.Export<GraceServiceScopeFactory>().As<IServiceScopeFactory>();
-
-                Register(c, descriptors);
-            });
+                exportLocator.Configure(c =>
+                {
+                    c.Export<GraceServiceProvider>().As<IServiceProvider>();
+                    c.Export<GraceLifetimeScopeServiceScopeFactory>().As<IServiceScopeFactory>();
+                    Register(c, descriptors);
+                });
+            }
+            else
+            {
+                exportLocator.Configure(c =>
+                {
+                    c.Export<GraceServiceProvider>().As<IServiceProvider>();
+                    c.ExportInstance((scope, context) => new GraceChildScopeServiceScopeFactory(scope, registrationDelegate)).As<IServiceScopeFactory>();
+                    Register(c, descriptors);
+                });
+            }
         }
 
         private static void Register(IExportRegistrationBlock c, IEnumerable<ServiceDescriptor> descriptors)
@@ -35,6 +53,7 @@ namespace Grace.DependencyInjection.Extensions
                 else if (descriptor.ImplementationFactory != null)
                 {
                     ILifestyle lifeStyle = null;
+
                     switch (descriptor.Lifetime)
                     {
                         case ServiceLifetime.Singleton:
@@ -45,17 +64,15 @@ namespace Grace.DependencyInjection.Extensions
                             break;
                     }
                     
-                    c.AddExportStrategy(
-                        new FuncInstanceExportStrategy(
-                            descriptor.ServiceType,
-                            lifeStyle,
-                            descriptor.ImplementationFactory));
+                    c.ExportInstance((scope,context) => descriptor.ImplementationFactory(new GraceServiceProvider(scope))).
+                        As(descriptor.ServiceType).
+                        ConfigureLifetime(descriptor.Lifetime);
                 }
                 else
                 {
                     c.ExportInstance(descriptor.ImplementationInstance).
                       As(descriptor.ServiceType).
-                     ConfigureLifetime(descriptor.Lifetime);
+                      ConfigureLifetime(descriptor.Lifetime);
                 }
             }
         }
@@ -112,18 +129,35 @@ namespace Grace.DependencyInjection.Extensions
             }
         }
 
-        private class GraceServiceScopeFactory : IServiceScopeFactory
+        private class GraceLifetimeScopeServiceScopeFactory : IServiceScopeFactory
         {
             private readonly IInjectionScope _injectionScope;
 
-            public GraceServiceScopeFactory(IInjectionScope injectionScope)
+            public GraceLifetimeScopeServiceScopeFactory(IInjectionScope injectionScope)
             {
                 _injectionScope = injectionScope;
             }
 
             public IServiceScope CreateScope()
             {
-                return new GraceServiceScope(_injectionScope.CreateChildScope());
+                return new GraceServiceScope(_injectionScope.BeginLifetimeScope());
+            }
+        }
+
+        public class GraceChildScopeServiceScopeFactory  : IServiceScopeFactory
+        {
+            private readonly IInjectionScope _injectionScope;
+            private readonly ExportRegistrationDelegate _registrationDelegate;
+
+            public GraceChildScopeServiceScopeFactory(IInjectionScope injectionScope, ExportRegistrationDelegate registrationDelegate)
+            {
+                _injectionScope = injectionScope;
+                _registrationDelegate = registrationDelegate;
+            }
+
+            public IServiceScope CreateScope()
+            {
+                return new GraceServiceScope(_injectionScope.CreateChildScope(_registrationDelegate));
             }
         }
 
