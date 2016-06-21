@@ -1,7 +1,7 @@
 {
   "version": "1.0.0-*",
   "dependencies": {
-    "Grace": "4.0.0-rc4-46",
+    "Grace": "4.0.0-rc6-51",
     "Microsoft.Extensions.DependencyInjection.Abstractions": "1.0.0-rc2-final"
   },
   "frameworks": {
