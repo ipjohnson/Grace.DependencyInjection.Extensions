@@ -15,7 +15,7 @@ namespace Grace.DependencyInjection.Extensions
         /// <param name="exportLocator">export locator</param>
         /// <param name="descriptors">descriptors</param>
         /// <param name="registrationDelegate">allows you to specify registration into child container (usually null)</param>
-        public static IServiceProvider CreateServiceProvider(
+        public static IServiceProvider Populate(
                 this IExportLocator exportLocator,
                 IEnumerable<ServiceDescriptor> descriptors,
                 ExportRegistrationDelegate registrationDelegate = null)
