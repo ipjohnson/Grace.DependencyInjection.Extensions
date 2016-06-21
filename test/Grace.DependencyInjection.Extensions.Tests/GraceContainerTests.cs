@@ -13,7 +13,7 @@ namespace Grace.DependencyInjection.Extensions.Tests
         {
             DependencyInjectionContainer container = new DependencyInjectionContainer();
 
-            return  container.CreateServiceProvider(serviceCollection);
+            return  container.Populate(serviceCollection);
         }
     }
 }
