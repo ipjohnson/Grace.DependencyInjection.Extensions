@@ -5,13 +5,13 @@
     "Microsoft.Extensions.DependencyInjection.Abstractions": "1.0.0-rc2-final"
   },
   "frameworks": {
-    "netcoreapp1.0": {
+    "netstandard1.5": {
       "imports": [
         "dotnet5.6",
         "dnxcore50",
         "portable-net45+win8"
       ]
     },
-    "net452": { }
+    "net451": { }
   }
 }
