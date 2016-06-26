@@ -12,6 +12,10 @@
         "portable-net45+win8"
       ]
     },
-    "net451": { }
+    "net451": {
+      "dependencies": {
+        "Grace": "4.0.0-rc7-54"
+      }
+    }
   }
 }
