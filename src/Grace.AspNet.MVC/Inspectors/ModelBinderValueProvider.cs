@@ -12,18 +12,20 @@ using System.Threading.Tasks;
 
 namespace Grace.AspNet.MVC.Inspectors
 {
-    public class ParameterModelBinderValueProvider : IExportValueProvider
+    public class ModelBinderValueProvider : IExportValueProvider
     {
-        private readonly ParameterInfo _parameterInfo;
+        private readonly object _cacheToken;
+        private readonly string _modelName;
         private readonly ModelMetadata _metadata;
         private readonly BindingInfo _binding;
         private readonly IModelBinderFactory _modelBinderFactory;
         private readonly IModelMetadataProvider _modelMetadataProvider;
         private readonly IReadOnlyList<IValueProviderFactory> _valueProviderFactories;
 
-        public ParameterModelBinderValueProvider(IModelBinderFactory modelBinderFactory, IModelMetadataProvider modelMetadataProvider,  ParameterInfo parameterInfo, IEnumerable<object> attributes, IOptions<MvcOptions> optionsAccessor)
+        public ModelBinderValueProvider(ParameterInfo parameterInfo, IEnumerable<object> attributes, IModelBinderFactory modelBinderFactory, IModelMetadataProvider modelMetadataProvider, IOptions<MvcOptions> optionsAccessor)
         {
-            _parameterInfo = parameterInfo;
+            _cacheToken = parameterInfo;
+            _modelName = parameterInfo.Name;
             _modelBinderFactory = modelBinderFactory;
             _binding = BindingInfo.GetBindingInfo(attributes);
             _modelMetadataProvider = modelMetadataProvider;
@@ -31,13 +33,25 @@ namespace Grace.AspNet.MVC.Inspectors
             _valueProviderFactories = optionsAccessor.Value.ValueProviderFactories.ToArray();
         }
 
+
+        public ModelBinderValueProvider(PropertyInfo propertyInfo, IEnumerable<object> attributes, IModelBinderFactory modelBinderFactory, IModelMetadataProvider modelMetadataProvider, IOptions<MvcOptions> optionsAccessor)
+        {
+            _cacheToken = propertyInfo;
+            _modelName = propertyInfo.Name;
+            _modelBinderFactory = modelBinderFactory;
+            _binding = BindingInfo.GetBindingInfo(attributes);
+            _modelMetadataProvider = modelMetadataProvider;
+            _metadata = _modelMetadataProvider.GetMetadataForType(propertyInfo.PropertyType);
+            _valueProviderFactories = optionsAccessor.Value.ValueProviderFactories.ToArray();
+        }
+        
         public object Activate(IInjectionScope exportInjectionScope, IInjectionContext context, ExportStrategyFilter consider, object locateKey)
         {
             var binder = _modelBinderFactory.CreateBinder(new ModelBinderFactoryContext()
             {
                 BindingInfo = _binding,
                 Metadata = _metadata,
-                CacheToken = _parameterInfo,
+                CacheToken = _cacheToken,
             });
 
             var accessor = exportInjectionScope.Locate<IActionContextAccessor>();
@@ -60,7 +74,7 @@ namespace Grace.AspNet.MVC.Inspectors
                 GetOperationBindingContext(controllerContext),
                 _metadata,
                 _binding,
-                _parameterInfo.Name);
+                _modelName);
 
             var parameterModelName = _binding.BinderModelName ?? _metadata.BinderModelName;
             if (parameterModelName != null)
@@ -68,10 +82,10 @@ namespace Grace.AspNet.MVC.Inspectors
                 // The name was set explicitly, always use that as the prefix.
                 modelBindingContext.ModelName = parameterModelName;
             }
-            else if (modelBindingContext.ValueProvider.ContainsPrefix(_parameterInfo.Name))
+            else if (modelBindingContext.ValueProvider.ContainsPrefix(_modelName))
             {
                 // We have a match for the parameter name, use that as that prefix.
-                modelBindingContext.ModelName = _parameterInfo.Name;
+                modelBindingContext.ModelName = _modelName;
             }
             else
             {
@@ -80,8 +94,15 @@ namespace Grace.AspNet.MVC.Inspectors
             }
 
             binder.BindModelAsync(modelBindingContext).Wait();
-            
-            return modelBindingContext.Result?.Model;
+
+            if (modelBindingContext.Result.HasValue &&
+               modelBindingContext.Result.Value.IsModelSet)
+            {
+                return modelBindingContext.Result?.Model;
+            }
+
+            // if we can't match return the default value
+            return context.TargetInfo.DefaultValue;
         }
 
         private OperationBindingContext GetOperationBindingContext(ControllerContext context)

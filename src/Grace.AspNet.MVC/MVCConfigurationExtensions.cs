@@ -38,6 +38,7 @@ namespace Grace.AspNet.MVC
             
             if (configuration.SupportHttpInfoInjection)
             {
+                locator.AddStrategyInspector(new ExportPropertyInspector());
                 locator.AddInjectionValueProviderInspector(new FromAttributeValueProviderInspector());
             }
 
