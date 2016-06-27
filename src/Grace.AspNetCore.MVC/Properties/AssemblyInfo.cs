@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 // associated with an assembly.
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Grace.AspNet.MVC")]
+[assembly: AssemblyProduct("Grace.AspNetCore.MVC")]
 [assembly: AssemblyTrademark("")]
 
 // Setting ComVisible to false makes the types in this assembly not visible
@@ -16,4 +16,4 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("aa266726-9f49-4618-b4fc-4285c45fabd3")]
+[assembly: Guid("13f8a268-abc8-4d91-b63d-306300f2d1b0")]

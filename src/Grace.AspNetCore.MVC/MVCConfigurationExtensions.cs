@@ -1,4 +1,4 @@
-﻿using Grace.AspNet.MVC.Inspectors;
+﻿using Grace.AspNetCore.MVC.Inspectors;
 using Grace.DependencyInjection;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.ViewComponents;
@@ -7,10 +7,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Grace.AspNet.MVC
+namespace Grace.AspNetCore.MVC
 {
-
-
     public class GraceMVCConfiguration
     {
         public GraceMVCConfiguration()
@@ -24,8 +22,7 @@ namespace Grace.AspNet.MVC
 
         public bool UseViewActivator { get; set; }
         
-        public bool SupportHttpInfoInjection { get; set; }
-        
+        public bool SupportHttpInfoInjection { get; set; }        
     }
 
     public static class MVCConfigurationExtensions

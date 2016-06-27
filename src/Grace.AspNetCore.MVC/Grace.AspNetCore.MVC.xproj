@@ -7,11 +7,11 @@
 
   <Import Project="$(VSToolsPath)\DotNet\Microsoft.DotNet.Props" Condition="'$(VSToolsPath)' != ''" />
   <PropertyGroup Label="Globals">
-    <ProjectGuid>aa266726-9f49-4618-b4fc-4285c45fabd3</ProjectGuid>
-    <RootNamespace>Grace.AspNet.MVC</RootNamespace>
+    <ProjectGuid>13f8a268-abc8-4d91-b63d-306300f2d1b0</ProjectGuid>
+    <RootNamespace>Grace.AspNetCore.MVC</RootNamespace>
     <BaseIntermediateOutputPath Condition="'$(BaseIntermediateOutputPath)'=='' ">.\obj</BaseIntermediateOutputPath>
     <OutputPath Condition="'$(OutputPath)'=='' ">.\bin\</OutputPath>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
   </PropertyGroup>
 
   <PropertyGroup>

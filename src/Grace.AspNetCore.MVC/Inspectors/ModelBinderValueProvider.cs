@@ -10,7 +10,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 
-namespace Grace.AspNet.MVC.Inspectors
+namespace Grace.AspNetCore.MVC.Inspectors
 {
     public class ModelBinderValueProvider : IExportValueProvider
     {

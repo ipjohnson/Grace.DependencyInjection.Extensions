@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Http;
 
-namespace Grace.AspNet.MVC
+namespace Grace.AspNetCore.MVC
 {
     public class GraceControllerActivator : IControllerActivator
     {

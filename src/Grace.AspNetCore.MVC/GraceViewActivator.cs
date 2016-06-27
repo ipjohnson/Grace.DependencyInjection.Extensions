@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.ViewComponents;
 
-namespace Grace.AspNet.MVC
+namespace Grace.AspNetCore.MVC
 {
     public class GraceViewActivator : IViewComponentActivator
     {
