@@ -12,7 +12,6 @@ namespace Grace.AspNetCore.MVC.Inspectors
 {
     public class FromAttributeValueProviderInspector : IInjectionValueProviderInspector
     {
-        private IOptions<MvcOptions> _options;
         private IModelMetadataProvider _modelMetadataProvider;
         private IModelBinderFactory _modelBinderFactory;
 
@@ -23,12 +22,7 @@ namespace Grace.AspNetCore.MVC.Inspectors
             {
                 return valueProvider;
             }
-
-            if (_options == null)
-            {
-                scope.TryLocate(out _options);
-            }
-
+            
             if (_modelBinderFactory == null)
             {
                 scope.TryLocate(out _modelBinderFactory);
@@ -39,19 +33,19 @@ namespace Grace.AspNetCore.MVC.Inspectors
                 scope.TryLocate(out _modelMetadataProvider);
             }
 
-            if (_options != null && _modelBinderFactory != null && _modelMetadataProvider != null)
+            if (_modelBinderFactory != null && _modelMetadataProvider != null)
             {
                 if (targetInfo.InjectionDependencyType == ExportStrategyDependencyType.Property)
                 {
                     PropertyInfo propertyInfo = targetInfo.InjectionTarget as PropertyInfo;
 
-                    return new ModelBinderValueProvider(propertyInfo, targetInfo.InjectionTargetAttributes, _modelBinderFactory, _modelMetadataProvider, _options);
+                    return new ModelBinderValueProvider(propertyInfo, targetInfo.InjectionTargetAttributes, _modelBinderFactory, _modelMetadataProvider);
                 }
                 else
                 {
                     ParameterInfo parameterInfo = targetInfo.InjectionTarget as ParameterInfo;
 
-                    return new ModelBinderValueProvider(parameterInfo, targetInfo.InjectionTargetAttributes, _modelBinderFactory, _modelMetadataProvider, _options);
+                    return new ModelBinderValueProvider(parameterInfo, targetInfo.InjectionTargetAttributes, _modelBinderFactory, _modelMetadataProvider);
                 }
             }
 

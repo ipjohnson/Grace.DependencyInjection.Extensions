@@ -20,9 +20,8 @@ namespace Grace.AspNetCore.MVC.Inspectors
         private readonly BindingInfo _binding;
         private readonly IModelBinderFactory _modelBinderFactory;
         private readonly IModelMetadataProvider _modelMetadataProvider;
-        private readonly IReadOnlyList<IValueProviderFactory> _valueProviderFactories;
 
-        public ModelBinderValueProvider(ParameterInfo parameterInfo, IEnumerable<object> attributes, IModelBinderFactory modelBinderFactory, IModelMetadataProvider modelMetadataProvider, IOptions<MvcOptions> optionsAccessor)
+        public ModelBinderValueProvider(ParameterInfo parameterInfo, IEnumerable<object> attributes, IModelBinderFactory modelBinderFactory, IModelMetadataProvider modelMetadataProvider)
         {
             _cacheToken = parameterInfo;
             _modelName = parameterInfo.Name;
@@ -30,11 +29,10 @@ namespace Grace.AspNetCore.MVC.Inspectors
             _binding = BindingInfo.GetBindingInfo(attributes);
             _modelMetadataProvider = modelMetadataProvider;
             _metadata = _modelMetadataProvider.GetMetadataForType(parameterInfo.ParameterType);
-            _valueProviderFactories = optionsAccessor.Value.ValueProviderFactories.ToArray();
         }
 
 
-        public ModelBinderValueProvider(PropertyInfo propertyInfo, IEnumerable<object> attributes, IModelBinderFactory modelBinderFactory, IModelMetadataProvider modelMetadataProvider, IOptions<MvcOptions> optionsAccessor)
+        public ModelBinderValueProvider(PropertyInfo propertyInfo, IEnumerable<object> attributes, IModelBinderFactory modelBinderFactory, IModelMetadataProvider modelMetadataProvider)
         {
             _cacheToken = propertyInfo;
             _modelName = propertyInfo.Name;
@@ -42,10 +40,29 @@ namespace Grace.AspNetCore.MVC.Inspectors
             _binding = BindingInfo.GetBindingInfo(attributes);
             _modelMetadataProvider = modelMetadataProvider;
             _metadata = _modelMetadataProvider.GetMetadataForType(propertyInfo.PropertyType);
-            _valueProviderFactories = optionsAccessor.Value.ValueProviderFactories.ToArray();
         }
-        
+
         public object Activate(IInjectionScope exportInjectionScope, IInjectionContext context, ExportStrategyFilter consider, object locateKey)
+        {
+            var activateTask = ActivateAsync(exportInjectionScope, context, consider, locateKey);
+
+            activateTask.Wait();
+
+            if (activateTask.Status == TaskStatus.RanToCompletion)
+            {
+                return activateTask.Result;
+            }
+            else if (activateTask.Exception != null)
+            {
+                throw new Exception("Exception thrown while trying to bind to " + _modelName, activateTask.Exception);
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        private async Task<object> ActivateAsync(IInjectionScope exportInjectionScope, IInjectionContext context, ExportStrategyFilter consider, object locateKey)
         {
             var binder = _modelBinderFactory.CreateBinder(new ModelBinderFactoryContext()
             {
@@ -55,23 +72,13 @@ namespace Grace.AspNetCore.MVC.Inspectors
             });
 
             var accessor = exportInjectionScope.Locate<IActionContextAccessor>();
-            var controllerContext = new ControllerContext(accessor.ActionContext) { ValidatorProviders = new List<IModelValidatorProvider>() };
+            var controllerContext = new ControllerContext(accessor.ActionContext);
 
-            var valueProviders = new List<IValueProvider>();
-            var factoryContext = new ValueProviderFactoryContext(accessor.ActionContext);
-
-            for (var i = 0; i < _valueProviderFactories.Count; i++)
-            {
-                var factory = _valueProviderFactories[i];
-                var resultTask = factory.CreateValueProviderAsync(factoryContext);
-
-                resultTask.Wait();
-            }
-
-            controllerContext.ValueProviders = factoryContext.ValueProviders;
+            var valueProvider = await CompositeValueProvider.CreateAsync(controllerContext);
 
             var modelBindingContext = DefaultModelBindingContext.CreateBindingContext(
-                GetOperationBindingContext(controllerContext),
+                accessor.ActionContext,
+                valueProvider,
                 _metadata,
                 _binding,
                 _modelName);
@@ -93,29 +100,15 @@ namespace Grace.AspNetCore.MVC.Inspectors
                 modelBindingContext.ModelName = string.Empty;
             }
 
-            binder.BindModelAsync(modelBindingContext).Wait();
+            await binder.BindModelAsync(modelBindingContext);
 
-            if (modelBindingContext.Result.HasValue &&
-               modelBindingContext.Result.Value.IsModelSet)
+            if (modelBindingContext.Result.IsModelSet)
             {
-                return modelBindingContext.Result?.Model;
+                return modelBindingContext.Result.Model;
             }
 
             // if we can't match return the default value
             return context.TargetInfo.DefaultValue;
         }
-
-        private OperationBindingContext GetOperationBindingContext(ControllerContext context)
-        {
-            return new OperationBindingContext
-            {
-                ActionContext = context,
-                InputFormatters = context.InputFormatters,
-                ValidatorProvider = new CompositeModelValidatorProvider(context.ValidatorProviders),
-                MetadataProvider = _modelMetadataProvider,
-                ValueProvider = new CompositeValueProvider(context.ValueProviders),
-            };
-        }
-
     }
 }
