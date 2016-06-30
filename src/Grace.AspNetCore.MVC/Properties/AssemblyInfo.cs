@@ -6,7 +6,8 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyDescription("Helper library for marrying Grace and ASp.Net Core MVC")]
+[assembly: AssemblyCompany("Ian Johnson")]
 [assembly: AssemblyProduct("Grace.AspNetCore.MVC")]
 [assembly: AssemblyTrademark("")]
 
