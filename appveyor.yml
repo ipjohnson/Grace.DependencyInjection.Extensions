@@ -1,0 +1,27 @@
+environment:
+  build_version: 5.0.1
+version: $(build_version)-{build}
+configuration: Release
+assembly_info:
+  patch: true
+  file: '**\AssemblyInfo.*'
+  assembly_version: '$(build_version).0'
+  assembly_file_version: '$(build_version).{build}'
+  assembly_informational_version: '$(build_version)'
+before_build:
+ - cmd: dotnet restore src/Grace.AspNetCore.Hosting
+ - cmd: dotnet restore src/Grace.AspNetCore.MVC
+ - cmd: dotnet restore src/Grace.DependencyInjection.Extensions
+ - cmd: dotnet restore test/Grace.DependencyInjection.Extensions.Tests
+build:
+  project: DependencyInjection.sln
+  publish_nuget: true
+  publish_nuget_symbols: true
+  verbosity: minimal
+after_build:
+- cmd: dotnet pack src/Grace.AspNetCore.Hosting/project.json -o . -c Release --version-suffix Nightly%APPVEYOR_BUILD_NUMBER%
+- cmd: dotnet pack src/Grace.AspNetCore.MVC/project.json -o . -c Release --version-suffix Nightly%APPVEYOR_BUILD_NUMBER%
+- cmd: dotnet pack src/Grace.DependencyInjection.Extensions/project.json -o . -c Release --version-suffix Nightly%APPVEYOR_BUILD_NUMBER%
+artifacts:
+- path: Grace*.nupkg
+  name: Grace

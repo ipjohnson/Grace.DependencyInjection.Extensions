@@ -1,20 +1,20 @@
-{
+﻿{
   "version": "5.0.1-*",
-  "authors": [ "Ian Johnson" ],
-  "description": "MVC extensions for Grace DI container",
 
   "dependencies": {
     "Grace": "5.0.0-*",
     "Grace.DependencyInjection.Extensions": "5.0.1-*",
-    "Microsoft.AspNetCore.Mvc.Core": "1.0.0",
-    "Microsoft.AspNetCore.Mvc.ViewFeatures": "1.0.0"
+    "Microsoft.AspNetCore.Hosting.Abstractions": "1.1.0"
   },
 
   "frameworks": {
-    "netstandard1.6": {
+    "netstandard1.3": {
+      "dependencies": {
+      }
     },
     "net451": {
-      "dependencies": {
+      "frameworkAssemblies": {
+        "System.Runtime": ""
       }
     }
   },
@@ -27,10 +27,7 @@
       "url": "https://github.com/ipjohnson/Grace"
     },
     "requireLicenseAcceptance": false,
-    "summary": "Grace.AspNetCore.MVC is a companion library for using Grace with AspNetCore.MVC",
+    "summary": "Grace.AspNetCore.Hosting is a companion library for easier integration with AspNetCore application builder",
     "tags": []
-  },
-  "buildOptions": {
-    "xmlDoc": true
   }
 }

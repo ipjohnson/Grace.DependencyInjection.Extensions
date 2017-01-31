@@ -1,16 +1,19 @@
-﻿using Grace.AspNetCore.MVC.Inspectors;
-using Grace.DependencyInjection;
+﻿using Grace.DependencyInjection;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.ViewComponents;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Grace.AspNetCore.MVC.Inspector;
 
 namespace Grace.AspNetCore.MVC
 {
+    /// <summary>
+    /// Configuration class for MVC extension
+    /// </summary>
     public class GraceMVCConfiguration
     {
+        /// <summary>
+        /// Default constructor
+        /// </summary>
         public GraceMVCConfiguration()
         {
             UseControllerActivator = true;
@@ -18,29 +21,46 @@ namespace Grace.AspNetCore.MVC
             SupportHttpInfoInjection = true;
         }
 
+        /// <summary>
+        /// Use custom controller activator
+        /// </summary>
         public bool UseControllerActivator { get; set; }
 
+        /// <summary>
+        /// Use custom view activator
+        /// </summary>
         public bool UseViewActivator { get; set; }
         
+        /// <summary>
+        /// Support injecting http info as dependency
+        /// </summary>
         public bool SupportHttpInfoInjection { get; set; }        
     }
 
+    /// <summary>
+    /// C# extension class
+    /// </summary>
     public static class MVCConfigurationExtensions
     {
-        public static void SetupMvc(this IExportLocator locator, Action<GraceMVCConfiguration> configure = null)
+        /// <summary>
+        /// Setup MVC extension for Grace (Controller activtor, View activator, MVC data as dependency)
+        /// </summary>
+        /// <param name="scope">injection scope to setup </param>
+        /// <param name="configure">configuration action</param>
+        public static void SetupMvc(this IInjectionScope scope, Action<GraceMVCConfiguration> configure = null)
         {
             var configuration = new GraceMVCConfiguration();
 
             configure?.Invoke(configuration);
             
-            if (configuration.SupportHttpInfoInjection)
+            scope.Configure(c =>
             {
-                locator.AddStrategyInspector(new ExportPropertyInspector());
-                locator.AddInjectionValueProviderInspector(new FromAttributeValueProviderInspector());
-            }
-
-            locator.Configure(c =>
-            {
+                if (configuration.SupportHttpInfoInjection)
+                {
+                    c.AddInspector(new BindingSourceAttributePropertyInspector());
+                    c.AddInjectionValueProvider(new BindingSourceMetadataValueProvider());
+                }
+                
                 if (configuration.UseControllerActivator)
                 {
                     c.Export<GraceControllerActivator>().As<IControllerActivator>().WithPriority(10).Lifestyle.Singleton();
