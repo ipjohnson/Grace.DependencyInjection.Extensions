@@ -39,7 +39,7 @@ namespace Grace.AspNetCore.MVC.Inspector
                 if (propertyInfo.GetCustomAttributes().Any(a => a is IBindingSourceMetadata))
                 {
                     exportStrategy.MemberInjectionSelector(
-                        new PropertyMemberInjectionSelector(new MemberInjectionInfo {MemberInfo = propertyInfo}));
+                        new KnownMemberInjectionSelector(new MemberInjectionInfo {MemberInfo = propertyInfo}));
                 }
             }
         }
