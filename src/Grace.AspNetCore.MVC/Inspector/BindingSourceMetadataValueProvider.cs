@@ -41,17 +41,10 @@ namespace Grace.AspNetCore.MVC.Inspector
 
             if (propertyInfo != null)
             {
-                var bindingAttributes =
-                    propertyInfo.GetCustomAttributes(true);
-
-                IBindingSourceMetadata metadata = null;
-
-                if (bindingAttributes != null)
-                {
-                    metadata = bindingAttributes.FirstOrDefault(a => a is IBindingSourceMetadata) as IBindingSourceMetadata;
-                }
-
-                if (metadata != null)
+                var bindingAttribute =
+                    propertyInfo.GetCustomAttributes(true)?.FirstOrDefault(a => a is IBindingSourceMetadata) as IBindingSourceMetadata;
+                
+                if (bindingAttribute != null)
                 {
                     return CreateExpressionResultFromBindingAttribute(scope,
                                                                   request,
@@ -70,7 +63,7 @@ namespace Grace.AspNetCore.MVC.Inspector
             if (fieldInfo != null)
             {
                 var bindingAttribute =
-                    fieldInfo.GetCustomAttributes(true).FirstOrDefault(a => a is IBindingSourceMetadata) as IBindingSourceMetadata;
+                    fieldInfo.GetCustomAttributes(true)?.FirstOrDefault(a => a is IBindingSourceMetadata) as IBindingSourceMetadata;
 
                 if (bindingAttribute != null)
                 {
@@ -90,7 +83,7 @@ namespace Grace.AspNetCore.MVC.Inspector
             if (parameterInfo != null)
             {
                 var bindingAttribute =
-                    parameterInfo.GetCustomAttributes(true).FirstOrDefault(a => a is IBindingSourceMetadata) as IBindingSourceMetadata;
+                    parameterInfo.GetCustomAttributes(true)?.FirstOrDefault(a => a is IBindingSourceMetadata) as IBindingSourceMetadata;
 
                 if (bindingAttribute != null)
                 {
