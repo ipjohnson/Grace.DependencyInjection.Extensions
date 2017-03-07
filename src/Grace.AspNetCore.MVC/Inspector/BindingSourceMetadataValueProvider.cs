@@ -42,7 +42,7 @@ namespace Grace.AspNetCore.MVC.Inspector
             if (propertyInfo != null)
             {
                 var bindingAttribute =
-                    propertyInfo.GetCustomAttributes(true).FirstOrDefault(a => a is IBindingSourceMetadata) as IBindingSourceMetadata;
+                    propertyInfo.GetCustomAttributes(true)?.FirstOrDefault(a => a is IBindingSourceMetadata) as IBindingSourceMetadata;
 
                 if (bindingAttribute != null)
                 {

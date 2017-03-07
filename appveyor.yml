@@ -1,5 +1,5 @@
 environment:
-  build_version: 5.1.0  
+  build_version: 5.1.1 
   nuget_suffix: Nightly%APPVEYOR_BUILD_NUMBER%
 version: $(build_version)-{build}
 configuration: Release
@@ -20,9 +20,9 @@ build:
   publish_nuget_symbols: true
   verbosity: minimal
 after_build:
-- cmd: dotnet pack src/Grace.AspNetCore.Hosting/project.json -o . -c Release
-- cmd: dotnet pack src/Grace.AspNetCore.MVC/project.json -o . -c Release
-- cmd: dotnet pack src/Grace.DependencyInjection.Extensions/project.json -o . -c Release
+- cmd: dotnet pack src/Grace.AspNetCore.Hosting/project.json -o . -c Release --version-suffix %nuget_suffix%
+- cmd: dotnet pack src/Grace.AspNetCore.MVC/project.json -o . -c Release --version-suffix %nuget_suffix%
+- cmd: dotnet pack src/Grace.DependencyInjection.Extensions/project.json -o . -c Release --version-suffix %nuget_suffix%
 artifacts:
 - path: Grace*.nupkg
   name: Grace
