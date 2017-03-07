@@ -21,7 +21,7 @@ namespace Grace.AspNetCore.MVC.Inspector
     public class BindingSourceMetadataValueProvider : IInjectionValueProvider
     {
         private IModelMetadataProvider _modelMetadataProvider;
-        private IModelBinderFactory _modelBinderFactory;        
+        private IModelBinderFactory _modelBinderFactory;
         private IReadOnlyList<IValueProviderFactory> _factories;
 
         /// <summary>
@@ -41,10 +41,17 @@ namespace Grace.AspNetCore.MVC.Inspector
 
             if (propertyInfo != null)
             {
-                var bindingAttribute =
-                    propertyInfo.GetCustomAttributes(true)?.FirstOrDefault(a => a is IBindingSourceMetadata) as IBindingSourceMetadata;
+                var bindingAttributes =
+                    propertyInfo.GetCustomAttributes(true);
 
-                if (bindingAttribute != null)
+                IBindingSourceMetadata metadata = null;
+
+                if (bindingAttributes != null)
+                {
+                    metadata = bindingAttributes.FirstOrDefault(a => a is IBindingSourceMetadata) as IBindingSourceMetadata;
+                }
+
+                if (metadata != null)
                 {
                     return CreateExpressionResultFromBindingAttribute(scope,
                                                                   request,
@@ -198,8 +205,8 @@ namespace Grace.AspNetCore.MVC.Inspector
                 var controllerContext = new ControllerContext(accessor.ActionContext);
                 var argumentBinder = scope.Locate<DefaultControllerArgumentBinder>();
 
-                controllerContext.ValueProviderFactories = new CopyOnWriteList<IValueProviderFactory>(_factories);    
-                    
+                controllerContext.ValueProviderFactories = new CopyOnWriteList<IValueProviderFactory>(_factories);
+
                 var descriptor = new ParameterDescriptor { BindingInfo = _binding, Name = _name, ParameterType = typeof(T) };
 
                 var activateTask = argumentBinder.BindModelAsync(descriptor, controllerContext);
@@ -225,7 +232,7 @@ namespace Grace.AspNetCore.MVC.Inspector
 
                 if (_defaultValue != null)
                 {
-                    return (T) _defaultValue;
+                    return (T)_defaultValue;
                 }
 
                 return default(T);
