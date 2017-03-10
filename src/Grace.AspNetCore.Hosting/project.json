@@ -29,5 +29,9 @@
     "requireLicenseAcceptance": false,
     "summary": "Grace.AspNetCore.Hosting is a companion library for easier integration with AspNetCore application builder",
     "tags": []
+  },
+  "buildOptions": {
+    "xmlDoc": true,
+    "keyFile": "../../tools/Grace.snk"
   }
 }
