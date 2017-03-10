@@ -1,10 +1,10 @@
 {
-  "version": "5.1.1-*",
+  "version": "5.2.0-*",
   "authors": [ "Ian Johnson" ],
   "description": "MVC extensions for Grace DI container",
 
   "dependencies": {
-    "Grace": "5.1.0-*",
+    "Grace": "5.2.0-Beta427",
     "Grace.DependencyInjection.Extensions": "5.1.1-*",
     "Microsoft.AspNetCore.Mvc.Core": "1.0.0",
     "Microsoft.AspNetCore.Mvc.ViewFeatures": "1.0.0"
