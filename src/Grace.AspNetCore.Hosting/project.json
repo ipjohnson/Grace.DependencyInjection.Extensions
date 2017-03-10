@@ -3,7 +3,7 @@
 
   "dependencies": {
     "Grace": "5.2.0-Beta427",
-    "Grace.DependencyInjection.Extensions": "5.1.1-*",
+    "Grace.DependencyInjection.Extensions": "5.2.0-*",
     "Microsoft.AspNetCore.Hosting.Abstractions": "1.1.0"
   },
 
