@@ -1,9 +1,9 @@
 {
-  "version": "5.2.0-*",
+  "version": "6.0.0-*",
 
   "dependencies": {
-    "Grace": "5.2.0-Beta427",
-    "Grace.DependencyInjection.Extensions": "5.2.0-*",
+    "Grace": "6.0.0",
+    "Grace.DependencyInjection.Extensions": "6.0.0-*",
     "Microsoft.AspNetCore.Hosting.Abstractions": "1.1.0"
   },
 
