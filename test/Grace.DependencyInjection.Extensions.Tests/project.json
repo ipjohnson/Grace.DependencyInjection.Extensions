@@ -20,7 +20,7 @@
           "type": "platform"
         },
         "System.Diagnostics.Process": "4.1.0-*",
-        "Grace.DependencyInjection.Extensions": "6.0.1-*"
+        "Grace.DependencyInjection.Extensions": "6.0.2-*"
       }
     }
   },

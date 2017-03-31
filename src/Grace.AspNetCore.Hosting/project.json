@@ -1,20 +1,15 @@
 {
-  "version": "6.0.1-*",
+  "version": "6.0.2-*",
 
   "dependencies": {
     "Grace": "6.0.1",
-    "Grace.DependencyInjection.Extensions": "6.0.1-*",
+    "Grace.DependencyInjection.Extensions": "6.0.2-*",
     "Microsoft.AspNetCore.Hosting.Abstractions": "1.1.0"
   },
 
   "frameworks": {
     "netstandard1.3": {
       "dependencies": {
-      }
-    },
-    "net451": {
-      "frameworkAssemblies": {
-        "System.Runtime": ""
       }
     }
   },

@@ -1,5 +1,5 @@
 environment:
-  build_version: 6.0.1
+  build_version: 6.0.2
   nuget_suffix: Beta%APPVEYOR_BUILD_NUMBER%
 version: $(build_version)-{build}
 configuration: Release

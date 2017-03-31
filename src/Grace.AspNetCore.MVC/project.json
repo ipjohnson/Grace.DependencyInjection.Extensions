@@ -1,21 +1,17 @@
 {
-  "version": "6.0.1-*",
+  "version": "6.0.2-*",
   "authors": [ "Ian Johnson" ],
   "description": "MVC extensions for Grace DI container",
 
   "dependencies": {
     "Grace": "6.0.1",
-    "Grace.DependencyInjection.Extensions": "6.0.1-*",
+    "Grace.DependencyInjection.Extensions": "6.0.2-*",
     "Microsoft.AspNetCore.Mvc.Core": "1.0.0",
     "Microsoft.AspNetCore.Mvc.ViewFeatures": "1.0.0"
   },
 
   "frameworks": {
     "netstandard1.6": {
-    },
-    "net451": {
-      "dependencies": {
-      }
     }
   },
   "packOptions": {
