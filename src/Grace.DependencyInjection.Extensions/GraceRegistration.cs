@@ -160,7 +160,6 @@ namespace Grace.DependencyInjection.Extensions
         private class GraceServiceScope : IServiceScope
         {
             private readonly IExportLocatorScope _injectionScope;
-            private bool _disposedValue = false; // To detect redundant calls
 
             /// <summary>
             /// Default constructor
@@ -169,7 +168,7 @@ namespace Grace.DependencyInjection.Extensions
             public GraceServiceScope(IExportLocatorScope injectionScope)
             {
                 _injectionScope = injectionScope;
-                ServiceProvider = _injectionScope.Locate<IServiceProvider>();
+                ServiceProvider = new GraceServiceProvider(injectionScope);
             }
 
             /// <summary>
@@ -177,26 +176,10 @@ namespace Grace.DependencyInjection.Extensions
             /// </summary>
             public IServiceProvider ServiceProvider { get; }
 
-            protected virtual void Dispose(bool disposing)
-            {
-                if (!_disposedValue)
-                {
-                    _disposedValue = disposing;
-
-                    if (disposing)
-                    {
-                        _injectionScope.Dispose();
-                    }
-                }
-            }
-
             // This code added to correctly implement the disposable pattern.
             public void Dispose()
             {
-                // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
-                Dispose(true);
-                // TODO: tell GC not to call its finalizer when the above finalizer is overridden.
-                // GC.SuppressFinalize(this);
+                _injectionScope.Dispose();
             }
         }
     }
