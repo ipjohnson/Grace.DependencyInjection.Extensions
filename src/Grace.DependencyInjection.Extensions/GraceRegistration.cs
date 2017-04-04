@@ -113,11 +113,7 @@ namespace Grace.DependencyInjection.Extensions
             /// <filterpriority>2</filterpriority>
             public object GetService(Type serviceType)
             {
-                object returnValue;
-
-                _injectionScope.TryLocate(serviceType, out returnValue);
-
-                return returnValue;
+                return _injectionScope.LocateOrDefault(serviceType, null);
             }
         }
 
