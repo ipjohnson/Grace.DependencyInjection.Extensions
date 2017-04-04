@@ -1,5 +1,5 @@
 {
-  "version": "6.0.2-*",
+  "version": "6.0.3-*",
   "authors": [ "Ian Johnson" ],
   "description": "ASP.Net Core DI extension for Grace container",
 
