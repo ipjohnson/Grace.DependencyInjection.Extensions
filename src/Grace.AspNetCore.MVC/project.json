@@ -12,7 +12,9 @@
 
   "frameworks": {
     "netstandard1.6": {
-    }
+    },
+    "net451": {
+    } 
   },
   "packOptions": {
     "licenseUrl": "https://github.com/ipjohnson/Grace/blob/master/License.md",
