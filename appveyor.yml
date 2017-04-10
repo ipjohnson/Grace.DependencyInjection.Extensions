@@ -20,9 +20,9 @@ build:
   publish_nuget_symbols: true
   verbosity: minimal
 after_build:
-- cmd: dotnet pack src/Grace.AspNetCore.Hosting/project.json -o . -c Release
-- cmd: dotnet pack src/Grace.AspNetCore.MVC/project.json -o . -c Release
-- cmd: dotnet pack src/Grace.DependencyInjection.Extensions/project.json -o . -c Release
+- cmd: dotnet pack src/Grace.AspNetCore.Hosting/project.json -o . -c Release --version-suffix %nuget_suffix%
+- cmd: dotnet pack src/Grace.AspNetCore.MVC/project.json -o . -c Release --version-suffix %nuget_suffix%
+- cmd: dotnet pack src/Grace.DependencyInjection.Extensions/project.json -o . -c Release --version-suffix %nuget_suffix%
 artifacts:
 - path: Grace*.nupkg
   name: Grace
