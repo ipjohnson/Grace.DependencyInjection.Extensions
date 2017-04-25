@@ -27,7 +27,7 @@ public void ConfigureContainer(IInjectionScope scope)
 }
 ```
 
-You can also replace the Controller and View activators allowing for controllers and views to be created by the container allowing for more performance and features.
+Grace provides custom controller and view activators providing better performance some custom features. 
 
 Add the [Grace.AspNetCore.MVC](https://www.nuget.org/packages/Grace.AspNetCore.MVC) nuget package.
 
