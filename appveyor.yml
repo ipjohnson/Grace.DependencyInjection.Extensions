@@ -1,6 +1,6 @@
 environment:
-  build_version: 6.0.3
-  nuget_suffix: Beta%APPVEYOR_BUILD_NUMBER%
+  build_version: 6.1.0
+  Version: $(build_version)-Nightly%APPVEYOR_BUILD_NUMBER%
 version: $(build_version)-{build}
 configuration: Release
 assembly_info:
@@ -10,19 +10,17 @@ assembly_info:
   assembly_file_version: '$(build_version).{build}'
   assembly_informational_version: '$(build_version)'
 before_build:
- - cmd: dotnet restore src/Grace.AspNetCore.Hosting
- - cmd: dotnet restore src/Grace.AspNetCore.MVC
- - cmd: dotnet restore src/Grace.DependencyInjection.Extensions
- - cmd: dotnet restore test/Grace.DependencyInjection.Extensions.Tests
+ - cmd: nuget restore DependencyInjection
 build:
   project: DependencyInjection.sln
   publish_nuget: true
   publish_nuget_symbols: true
   verbosity: minimal
 after_build:
-- cmd: dotnet pack src/Grace.AspNetCore.Hosting/project.json -o . -c Release
-- cmd: dotnet pack src/Grace.AspNetCore.MVC/project.json -o . -c Release
-- cmd: dotnet pack src/Grace.DependencyInjection.Extensions/project.json -o . -c Release
+- cmd: msbuild /t:pack src/Grace.AspNetCore.Hosting/Grace.AspNetCore.Hosting.csproj /p:Configuration=Release /p:IncludeSymbols=true /p:PackageOutputPath=..\..\
+- cmd: msbuild /t:pack src/Grace.AspNetCore.MVC/Grace.AspNetCore.MVC.csproj /p:Configuration=Release /p:IncludeSymbols=true /p:PackageOutputPath=..\..\
+- cmd: msbuild /t:pack src/Grace.DependencyInjection.Extensions/Grace.DependencyInjection.Extensions.csproj /p:Configuration=Release /p:IncludeSymbols=true /p:PackageOutputPath=..\..\
 artifacts:
 - path: Grace*.nupkg
   name: Grace
+os: Visual Studio 2017

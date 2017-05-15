@@ -1,0 +1,34 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <Description>MVC extensions for Grace DI container</Description>
+    <VersionPrefix>6.0.3</VersionPrefix>
+    <Authors>Ian Johnson</Authors>
+    <TargetFramework>netstandard1.6</TargetFramework>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <AssemblyName>Grace.AspNetCore.MVC</AssemblyName>
+    <AssemblyOriginatorKeyFile>../../tools/Grace.snk</AssemblyOriginatorKeyFile>
+    <SignAssembly>true</SignAssembly>
+    <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
+    <PackageId>Grace.AspNetCore.MVC</PackageId>
+    <PackageReleaseNotes>https://github.com/ipjohnson/Grace/blob/master/Changes-For-5.0.md</PackageReleaseNotes>
+    <PackageProjectUrl>https://github.com/ipjohnson/Grace</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/ipjohnson/Grace/blob/master/License.md</PackageLicenseUrl>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/ipjohnson/Grace</RepositoryUrl>
+    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Grace.DependencyInjection.Extensions\Grace.DependencyInjection.Extensions.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Grace" Version="6.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="1.0.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.ViewFeatures" Version="1.0.3" />
+  </ItemGroup>
+
+</Project>

@@ -1,25 +1,24 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26228.9
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{D26F6F80-63EE-4081-A814-EF3DBABE24D9}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{88B347C1-CCEC-4827-9564-FFF07C9BF7C7}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Grace.DependencyInjection.Extensions", "src\Grace.DependencyInjection.Extensions\Grace.DependencyInjection.Extensions.xproj", "{0FEAE278-198D-45F1-9B63-7FB691DC522B}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{AE549125-F1C0-4515-8877-5F787F5C8CB5}"
 	ProjectSection(SolutionItems) = preProject
 		appveyor.yml = appveyor.yml
-		global.json = global.json
 	EndProjectSection
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Grace.DependencyInjection.Extensions.Tests", "test\Grace.DependencyInjection.Extensions.Tests\Grace.DependencyInjection.Extensions.Tests.xproj", "{D0ED6387-133E-4024-8EC4-662C6CC150BB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Grace.DependencyInjection.Extensions", "src\Grace.DependencyInjection.Extensions\Grace.DependencyInjection.Extensions.csproj", "{0FEAE278-198D-45F1-9B63-7FB691DC522B}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Grace.AspNetCore.MVC", "src\Grace.AspNetCore.MVC\Grace.AspNetCore.MVC.xproj", "{13F8A268-ABC8-4D91-B63D-306300F2D1B0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Grace.DependencyInjection.Extensions.Tests", "test\Grace.DependencyInjection.Extensions.Tests\Grace.DependencyInjection.Extensions.Tests.csproj", "{D0ED6387-133E-4024-8EC4-662C6CC150BB}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Grace.AspNetCore.Hosting", "src\Grace.AspNetCore.Hosting\Grace.AspNetCore.Hosting.xproj", "{DD0B66A0-9654-4437-B8D5-6E03C4C0AE9C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Grace.AspNetCore.MVC", "src\Grace.AspNetCore.MVC\Grace.AspNetCore.MVC.csproj", "{13F8A268-ABC8-4D91-B63D-306300F2D1B0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Grace.AspNetCore.Hosting", "src\Grace.AspNetCore.Hosting\Grace.AspNetCore.Hosting.csproj", "{DD0B66A0-9654-4437-B8D5-6E03C4C0AE9C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
