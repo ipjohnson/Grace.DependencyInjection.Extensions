@@ -1,6 +1,6 @@
 environment:
   build_version: 6.1.1
-  Version: $(build_version)-Nightly%APPVEYOR_BUILD_NUMBER%
+  Version: $(build_version)-Beta%APPVEYOR_BUILD_NUMBER%
 version: $(build_version)-{build}
 configuration: Release
 assembly_info:
