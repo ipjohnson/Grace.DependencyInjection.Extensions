@@ -4,7 +4,7 @@
     <Description>MVC extensions for Grace DI container</Description>
     <VersionPrefix>6.0.3</VersionPrefix>
     <Authors>Ian Johnson</Authors>
-    <TargetFramework>netstandard1.6</TargetFramework>
+    <TargetFrameworks>netstandard1.6;net451</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>Grace.AspNetCore.MVC</AssemblyName>
     <AssemblyOriginatorKeyFile>../Grace.snk</AssemblyOriginatorKeyFile>
