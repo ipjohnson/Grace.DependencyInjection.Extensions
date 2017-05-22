@@ -38,3 +38,4 @@ public void ConfigureContainer(IInjectionScope scope)
   scope.SetupMvc();
 }
 ```
+[![Build status](https://ci.appveyor.com/api/projects/status/r8oneht7oenf2p5a?svg=true)](https://ci.appveyor.com/project/ipjohnson/grace-dependencyinjection-extensions) [![Build Status](https://travis-ci.org/ipjohnson/Grace.DependencyInjection.Extensions.svg?branch=master)](https://travis-ci.org/ipjohnson/Grace.DependencyInjection.Extensions)
