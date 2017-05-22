@@ -3,6 +3,6 @@ language: csharp
 mono: none
 dotnet: 1.0.1
 install:
-  - dotnet restoe DependencyInjection.sln
+  - dotnet restore DependencyInjection.sln
 script:
 - dotnet test -f netcoreapp1.1 test/Grace.DependencyInjection.Extensions.Tests/Grace.DependencyInjection.Extensions.Tests.csproj
