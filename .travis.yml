@@ -5,4 +5,4 @@ dotnet: 1.0.1
 install:
   - dotnet restore DependencyInjection.sln
 script:
-- dotnet test -f netcoreapp1.1 test/Grace.DependencyInjection.Extensions.Tests/Grace.DependencyInjection.Extensions.Tests.csproj
+- dotnet test -f netcoreapp1.0 test/Grace.DependencyInjection.Extensions.Tests/Grace.DependencyInjection.Extensions.Tests.csproj
