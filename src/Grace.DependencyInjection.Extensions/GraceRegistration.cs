@@ -18,7 +18,7 @@ namespace Grace.DependencyInjection.Extensions
         {
             exportLocator.Configure(c =>
             {
-                c.Export<GraceServiceProvider>().As<IServiceProvider>();
+                c.Export<GraceServiceProvider>().As<IServiceProvider>().ExternallyOwned();
                 c.Export<GraceLifetimeScopeServiceScopeFactory>().As<IServiceScopeFactory>();
                 Register(c, descriptors);
             });
@@ -82,7 +82,7 @@ namespace Grace.DependencyInjection.Extensions
         /// <summary>
         /// Service provider for Grace
         /// </summary>
-        private class GraceServiceProvider : IServiceProvider, ISupportRequiredService
+        private class GraceServiceProvider : IServiceProvider, ISupportRequiredService, IDisposable
         {
             private readonly IExportLocatorScope _injectionScope;
 
@@ -114,6 +114,12 @@ namespace Grace.DependencyInjection.Extensions
             public object GetService(Type serviceType)
             {
                 return _injectionScope.LocateOrDefault(serviceType, null);
+            }
+
+            /// <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>
+            public void Dispose()
+            {
+                _injectionScope?.Dispose();
             }
         }
 
