@@ -3,3 +3,11 @@
 ################################################################################
 
 /src/Grace.AspNetCore.Hosting/obj
+/src/Grace.AspNetCore.Hosting/bin
+/.vs
+/src/Grace.AspNetCore.MVC/bin
+/src/Grace.AspNetCore.MVC/obj
+/src/Grace.DependencyInjection.Extensions/obj
+/src/Grace.DependencyInjection.Extensions/bin
+/test/Grace.DependencyInjection.Extensions.Tests/obj
+/test/Grace.DependencyInjection.Extensions.Tests/bin
