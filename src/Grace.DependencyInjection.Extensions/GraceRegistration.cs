@@ -22,7 +22,7 @@ namespace Grace.DependencyInjection.Extensions
                 c.Export<GraceLifetimeScopeServiceScopeFactory>().As<IServiceScopeFactory>();
                 Register(c, descriptors);
             });
-            
+
             return exportLocator.Locate<IServiceProvider>();
         }
 
@@ -38,7 +38,7 @@ namespace Grace.DependencyInjection.Extensions
                 }
                 else if (descriptor.ImplementationFactory != null)
                 {
-                    c.ExportInstance((scope, context) => descriptor.ImplementationFactory(new GraceServiceProvider(scope))).
+                    c.ExportFactory(descriptor.ImplementationFactory).
                         As(descriptor.ServiceType).
                         ConfigureLifetime(descriptor.Lifetime);
                 }
@@ -119,7 +119,7 @@ namespace Grace.DependencyInjection.Extensions
             /// <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>
             public void Dispose()
             {
-                _injectionScope?.Dispose();
+                _injectionScope.Dispose();
             }
         }
 
