@@ -1,6 +1,7 @@
 environment:
   build_version: 6.3.0
   Version: $(build_version)-Beta%APPVEYOR_BUILD_NUMBER%
+version: $(build_version)-{build}
 configuration: Release
 assembly_info:
   patch: true
