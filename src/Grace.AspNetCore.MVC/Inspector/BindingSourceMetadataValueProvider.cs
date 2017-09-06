@@ -25,6 +25,61 @@ namespace Grace.AspNetCore.MVC.Inspector
         private IReadOnlyList<IValueProviderFactory> _factories;
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="scope"></param>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public bool CanLocate(IInjectionScope scope, IActivationExpressionRequest request)
+        {
+            if (request.Info == null)
+            {
+                return false;
+            }
+
+            if (request.Info is PropertyInfo propertyInfo)
+            {
+                var bindingAttribute =
+                    propertyInfo.GetCustomAttributes(true)?.FirstOrDefault(a => a is IBindingSourceMetadata) as
+                        IBindingSourceMetadata;
+
+                if (bindingAttribute != null)
+                {
+                    return true;
+                }
+
+                return false;
+            }
+
+
+            if (request.Info is PropertyInfo fieldInfo)
+            {
+                var bindingAttribute =
+                    fieldInfo.GetCustomAttributes(true)?.FirstOrDefault(a => a is IBindingSourceMetadata) as IBindingSourceMetadata;
+
+                if (bindingAttribute != null)
+                {
+                    return true;
+                }
+
+                return false;
+            }
+
+            if (request.Info is ParameterInfo parameterInfo)
+            {
+                var bindingAttribute =
+                    parameterInfo.GetCustomAttributes(true)?.FirstOrDefault(a => a is IBindingSourceMetadata) as IBindingSourceMetadata;
+
+                if (bindingAttribute != null)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
         /// Get an expression for the request, returns null if this provider doesn't support it
         /// </summary>
         /// <param name="scope">scope for request</param>
@@ -37,9 +92,7 @@ namespace Grace.AspNetCore.MVC.Inspector
                 return null;
             }
 
-            var propertyInfo = request.Info as PropertyInfo;
-
-            if (propertyInfo != null)
+            if (request.Info is PropertyInfo propertyInfo)
             {
                 var bindingAttribute =
                     propertyInfo.GetCustomAttributes(true)?.FirstOrDefault(a => a is IBindingSourceMetadata) as IBindingSourceMetadata;
@@ -57,10 +110,7 @@ namespace Grace.AspNetCore.MVC.Inspector
                 return null;
             }
 
-
-            var fieldInfo = request.Info as PropertyInfo;
-
-            if (fieldInfo != null)
+            if (request.Info is PropertyInfo fieldInfo)
             {
                 var bindingAttribute =
                     fieldInfo.GetCustomAttributes(true)?.FirstOrDefault(a => a is IBindingSourceMetadata) as IBindingSourceMetadata;
@@ -78,9 +128,7 @@ namespace Grace.AspNetCore.MVC.Inspector
                 return null;
             }
 
-            var parameterInfo = request.Info as ParameterInfo;
-
-            if (parameterInfo != null)
+            if (request.Info is ParameterInfo parameterInfo)
             {
                 var bindingAttribute =
                     parameterInfo.GetCustomAttributes(true)?.FirstOrDefault(a => a is IBindingSourceMetadata) as IBindingSourceMetadata;
@@ -123,9 +171,7 @@ namespace Grace.AspNetCore.MVC.Inspector
 
             if (_factories == null)
             {
-                IOptions<MvcOptions> optionsAccessor;
-
-                if (scope.TryLocate(out optionsAccessor))
+                if (scope.TryLocate(out IOptions<MvcOptions> optionsAccessor))
                 {
                     _factories = optionsAccessor.Value.ValueProviderFactories.ToArray();
                 }
