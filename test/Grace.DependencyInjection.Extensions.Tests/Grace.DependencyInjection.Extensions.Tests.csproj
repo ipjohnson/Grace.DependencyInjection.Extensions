@@ -19,7 +19,7 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="1.0.2" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Specification.Tests" Version="1.0.0-*" />
     <PackageReference Include="xunit" Version="2.2.0-beta5-build3474" />
-    <PackageReference Include="Grace" Version="6.3.0-Beta615" />
+    <PackageReference Include="Grace" Version="6.3.0" />
   </ItemGroup>
 
 </Project>

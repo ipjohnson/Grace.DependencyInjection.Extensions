@@ -24,7 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Grace" Version="6.3.0-Beta615" />
+    <PackageReference Include="Grace" Version="6.3.0" />
     <PackageReference Include="Microsoft.AspNetCore.Hosting.Abstractions" Version="1.1.1" />
   </ItemGroup>
 
