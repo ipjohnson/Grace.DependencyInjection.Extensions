@@ -1,8 +1,0 @@
-dist: trusty
-language: csharp
-mono: none
-dotnet: 1.1.6
-install:
-  - dotnet restore DependencyInjection.sln
-script:
-- dotnet test -f netcoreapp1.0 test/Grace.DependencyInjection.Extensions.Tests/Grace.DependencyInjection.Extensions.Tests.csproj
