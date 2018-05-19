@@ -16,10 +16,6 @@ build:
   publish_nuget: true
   publish_nuget_symbols: true
   verbosity: minimal
-after_build:
-- cmd: msbuild /t:pack src/Grace.AspNetCore.Hosting/Grace.AspNetCore.Hosting.csproj /p:Configuration=Release /p:IncludeSymbols=true /p:PackageOutputPath=..\..\
-- cmd: msbuild /t:pack src/Grace.AspNetCore.MVC/Grace.AspNetCore.MVC.csproj /p:Configuration=Release /p:IncludeSymbols=true /p:PackageOutputPath=..\..\
-- cmd: msbuild /t:pack src/Grace.DependencyInjection.Extensions/Grace.DependencyInjection.Extensions.csproj /p:Configuration=Release /p:IncludeSymbols=true /p:PackageOutputPath=..\..\
 artifacts:
 - path: Grace*.nupkg
   name: Grace

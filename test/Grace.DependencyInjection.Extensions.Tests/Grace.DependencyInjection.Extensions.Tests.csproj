@@ -6,6 +6,7 @@
     <PackageId>Grace.DependencyInjection.Extensions.Tests</PackageId>
     <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
     <RuntimeFrameworkVersion>1.0.4</RuntimeFrameworkVersion>
+    <IsPackable>false</IsPackable>
   </PropertyGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp1.0' ">
