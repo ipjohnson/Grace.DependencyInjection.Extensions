@@ -19,6 +19,7 @@ namespace Grace.DependencyInjection.Extensions
         {
             exportLocator.Configure(c =>
             {
+                c.ExcludeTypeFromAutoRegistration("Microsoft.*");
                 c.Export<GraceServiceProvider>().As<IServiceProvider>().ExternallyOwned();
                 c.Export<GraceLifetimeScopeServiceScopeFactory>().As<IServiceScopeFactory>();
                 Register(c, descriptors);
