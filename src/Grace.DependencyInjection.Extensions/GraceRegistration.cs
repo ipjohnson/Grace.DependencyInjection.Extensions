@@ -84,7 +84,7 @@ namespace Grace.DependencyInjection.Extensions
         /// <summary>
         /// Service provider for Grace
         /// </summary>
-        private class GraceServiceProvider : IServiceProvider, ISupportRequiredService, IDisposable
+        private class GraceServiceProvider : IServiceProvider,  IDisposable
         {
             private readonly IExportLocatorScope _injectionScope;
 
@@ -95,19 +95,6 @@ namespace Grace.DependencyInjection.Extensions
             public GraceServiceProvider(IExportLocatorScope injectionScope)
             {
                 _injectionScope = injectionScope;
-            }
-
-            /// <summary>
-            /// Gets service of type <paramref name="serviceType" /> from the <see cref="T:System.IServiceProvider" /> implementing
-            /// this interface.
-            /// </summary>
-            /// <param name="serviceType">An object that specifies the type of service object to get.</param>
-            /// <returns>A service object of type <paramref name="serviceType" />.
-            /// Throws an exception if the <see cref="T:System.IServiceProvider" /> cannot create the object.</returns>
-            public object GetRequiredService(Type serviceType)
-            {
-                return _injectionScope.Locate(serviceType) ?? 
-                       throw new LocateException(new StaticInjectionContext(serviceType));
             }
 
             /// <summary>Gets the service object of the specified type.</summary>
@@ -173,7 +160,11 @@ namespace Grace.DependencyInjection.Extensions
             public GraceServiceScope(IExportLocatorScope injectionScope)
             {
                 _injectionScope = injectionScope;
+#if NETSTANDARD1_0
                 ServiceProvider = new GraceServiceProvider(injectionScope);
+#else
+                ServiceProvider = injectionScope;
+#endif
             }
 
             /// <summary>

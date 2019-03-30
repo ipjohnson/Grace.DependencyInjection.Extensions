@@ -37,7 +37,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Grace" Version="6.3.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="1.0.3" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.ViewFeatures" Version="1.0.3" />
   </ItemGroup>

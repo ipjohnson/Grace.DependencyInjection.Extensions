@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <VersionPrefix>6.0.3</VersionPrefix>
-    <TargetFramework>netstandard1.3</TargetFramework>
+    <TargetFrameworks>netstandard2.0;</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>Grace.AspNetCore.Hosting</AssemblyName>
     <AssemblyOriginatorKeyFile>../Grace.snk</AssemblyOriginatorKeyFile>
@@ -35,8 +35,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Grace" Version="6.3.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Hosting.Abstractions" Version="1.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Hosting.Abstractions" Version="2.1.1" />
+
   </ItemGroup>
 
 </Project>

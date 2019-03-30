@@ -6,6 +6,7 @@ using Grace.DependencyInjection;
 using Grace.DependencyInjection.Extensions;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 namespace Grace.AspNetCore.Hosting
 {
@@ -15,23 +16,15 @@ namespace Grace.AspNetCore.Hosting
     public static class GraceServiceProviderExtensions
     {
         /// <summary>
-        /// Add Grace DI container
-        /// </summary>
-        /// <param name="collection"></param>
-        /// <param name="configuration"></param>
-        public static IServiceCollection AddGrace(this IServiceCollection collection, IInjectionScopeConfiguration configuration = null)
-        {
-            return collection.AddSingleton<IServiceProviderFactory<IInjectionScope>>(new GraceServiceProviderFactory(configuration));
-        }
-
-        /// <summary>
-        /// 
+        /// Use Grace for dependency injection
         /// </summary>
         /// <param name="builder"></param>
         /// <param name="configuration"></param>
-        public static IWebHostBuilder UseGrace(this IWebHostBuilder builder, IInjectionScopeConfiguration configuration = null)
+        /// <returns></returns>
+        public static IHostBuilder UseGrace(this IHostBuilder builder,
+            IInjectionScopeConfiguration configuration = null)
         {
-            return builder.ConfigureServices(c => c.AddGrace(configuration));
+            return builder.UseServiceProviderFactory(new GraceServiceProviderFactory(configuration));
         }
 
         private class GraceServiceProviderFactory : IServiceProviderFactory<IInjectionScope>
