@@ -12,6 +12,7 @@
     <PackageReleaseNotes>https://github.com/ipjohnson/Grace/blob/master/Changes-For-5.0.md</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/ipjohnson/Grace</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/ipjohnson/Grace/blob/master/License.md</PackageLicenseUrl>
+    <PackageIconUrl>https://github.com/ipjohnson/Grace/raw/master/img/logo-64.png</PackageIconUrl>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/ipjohnson/Grace</RepositoryUrl>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
