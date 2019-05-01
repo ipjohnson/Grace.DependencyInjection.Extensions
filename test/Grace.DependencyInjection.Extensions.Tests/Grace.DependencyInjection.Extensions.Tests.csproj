@@ -22,7 +22,6 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Specification.Tests" Version="2.2.0" />
     <PackageReference Include="xunit" Version="2.4.1" />
-    <PackageReference Include="Grace" Version="7.0.0-Beta740" />
   </ItemGroup>
 
   <ItemGroup>
