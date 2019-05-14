@@ -16,7 +16,7 @@ namespace Grace.AspNetCore.Hosting
     public static class GraceServiceProviderExtensions
     {
         /// <summary>
-        /// Use Grace for dependency injection
+        /// This method is for ASP.Net Core 3.0
         /// </summary>
         /// <param name="builder"></param>
         /// <param name="configuration"></param>
@@ -25,6 +25,18 @@ namespace Grace.AspNetCore.Hosting
             IInjectionScopeConfiguration configuration = null)
         {
             return builder.UseServiceProviderFactory(new GraceServiceProviderFactory(configuration));
+        }
+
+        /// <summary>
+        /// This should be used for ASP.Net 2.0 - 2.2
+        /// </summary>
+        /// <param name="builder"></param>
+        /// <param name="configuration"></param>
+        /// <returns></returns>
+        public static IWebHostBuilder UseGrace(this IWebHostBuilder builder,
+            IInjectionScopeConfiguration configuration = null)
+        {
+            return builder.ConfigureServices(c => c.AddSingleton<IServiceProviderFactory<IInjectionScope>>(new GraceServiceProviderFactory(configuration)));
         }
 
         private class GraceServiceProviderFactory : IServiceProviderFactory<IInjectionScope>
