@@ -13,6 +13,20 @@ var host = new WebHostBuilder()
                 .Build();
 ```
 
+When using with .Net Core 3.x, make sure to `UseGrace()` from the IHostBuilder, not the IWebHostBuilder:
+```
+ public static IHostBuilder CreateHostBuilder(string[] args) =>
+            Host.CreateDefaultBuilder(args)
+                // UseGrace() goes here
+                .UseGrace()
+                .ConfigureWebHostDefaults(webBuilder =>
+                {
+                    webBuilder
+                        // UseGrace() doesn't go here
+                        .UseStartup<Startup>();
+                });
+```
+
 Startup.cs
 ```
 public void ConfigureServices(IServiceCollection services)
