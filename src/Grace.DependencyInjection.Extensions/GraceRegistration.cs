@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using Grace.DependencyInjection.Exceptions;
 using Microsoft.Extensions.DependencyInjection;
+#if NETSTANDARD2_0
+using Microsoft.Extensions.Options;
+#endif
 
 namespace Grace.DependencyInjection.Extensions
 {
@@ -46,6 +48,32 @@ namespace Grace.DependencyInjection.Extensions
                 }
                 else
                 {
+#if NETSTANDARD2_0
+                    var instanceType = descriptor.ImplementationInstance.GetType();
+                    if (instanceType.IsConstructedGenericType)
+                    {
+                        var type = instanceType;
+                        while (type != null && type.IsConstructedGenericType)
+                        {
+                            if (type.GetGenericTypeDefinition() == typeof(ConfigureNamedOptions<>))
+                            {
+                                break;
+                            }
+
+                            type = type.BaseType;
+                        }
+
+                        if (type != null && type.IsConstructedGenericType)
+                        {
+                            var nameProperty = instanceType.GetProperty("Name");
+                            var name = nameProperty.GetValue(descriptor.ImplementationInstance);
+                            c.ExportInstance(descriptor.ImplementationInstance)
+                                .AsKeyed(descriptor.ServiceType, name)
+                                .ConfigureLifetime(descriptor.Lifetime);
+                            continue;
+                        }
+                    }
+#endif
                     c.ExportInstance(descriptor.ImplementationInstance).
                       As(descriptor.ServiceType).
                       ConfigureLifetime(descriptor.Lifetime);
