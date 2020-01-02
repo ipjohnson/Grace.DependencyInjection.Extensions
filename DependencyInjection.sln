@@ -20,6 +20,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Grace.AspNetCore.MVC", "src
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Grace.AspNetCore.Hosting", "src\Grace.AspNetCore.Hosting\Grace.AspNetCore.Hosting.csproj", "{DD0B66A0-9654-4437-B8D5-6E03C4C0AE9C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Grace.Extensions.Hosting", "src\Grace.Extensions.Hosting\Grace.Extensions.Hosting.csproj", "{D5368497-E34F-475E-B356-B11F87779108}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -42,6 +44,10 @@ Global
 		{DD0B66A0-9654-4437-B8D5-6E03C4C0AE9C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DD0B66A0-9654-4437-B8D5-6E03C4C0AE9C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DD0B66A0-9654-4437-B8D5-6E03C4C0AE9C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D5368497-E34F-475E-B356-B11F87779108}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D5368497-E34F-475E-B356-B11F87779108}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D5368497-E34F-475E-B356-B11F87779108}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D5368497-E34F-475E-B356-B11F87779108}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -51,5 +57,9 @@ Global
 		{D0ED6387-133E-4024-8EC4-662C6CC150BB} = {88B347C1-CCEC-4827-9564-FFF07C9BF7C7}
 		{13F8A268-ABC8-4D91-B63D-306300F2D1B0} = {D26F6F80-63EE-4081-A814-EF3DBABE24D9}
 		{DD0B66A0-9654-4437-B8D5-6E03C4C0AE9C} = {D26F6F80-63EE-4081-A814-EF3DBABE24D9}
+		{D5368497-E34F-475E-B356-B11F87779108} = {D26F6F80-63EE-4081-A814-EF3DBABE24D9}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0D1F66AE-56EE-4D3A-9FBD-BF5E7EFE7B3A}
 	EndGlobalSection
 EndGlobal

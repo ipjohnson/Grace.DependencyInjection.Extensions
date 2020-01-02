@@ -14,3 +14,5 @@
 /src/Grace.AspNetCore.Hosting/Properties/launchSettings.json
 /src/Grace.AspNetCore.Hosting/Grace.AspNetCore.Hosting.csproj.user
 /DependencyInjection.sln.DotSettings.user
+/src/Grace.Extensions.Hosting/obj
+/src/Grace.Extensions.Hosting/bin
