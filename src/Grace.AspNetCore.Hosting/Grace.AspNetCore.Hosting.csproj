@@ -9,7 +9,7 @@
     <SignAssembly>true</SignAssembly>
     <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
     <PackageId>Grace.AspNetCore.Hosting</PackageId>
-    <PackageReleaseNotes>https://github.com/ipjohnson/Grace/blob/master/Changes-For-5.0.md</PackageReleaseNotes>
+    <PackageReleaseNotes>https://github.com/ipjohnson/Grace/wiki/Release-Notes</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/ipjohnson/Grace</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/ipjohnson/Grace/blob/master/License.md</PackageLicenseUrl>
     <PackageIconUrl>https://github.com/ipjohnson/Grace/raw/master/img/logo-64.png</PackageIconUrl>
