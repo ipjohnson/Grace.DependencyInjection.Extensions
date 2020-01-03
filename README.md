@@ -54,4 +54,7 @@ public void ConfigureContainer(IInjectionScope scope)
    // add your registrations here
 }
 ```
+
+Note: .net core 1.0 support will be removed in version 7.1.0
+
 [![Build status](https://ci.appveyor.com/api/projects/status/r8oneht7oenf2p5a?svg=true)](https://ci.appveyor.com/project/ipjohnson/grace-dependencyinjection-extensions)
