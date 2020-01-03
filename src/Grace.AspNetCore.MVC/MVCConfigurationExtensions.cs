@@ -43,7 +43,7 @@ namespace Grace.AspNetCore.MVC
     public static class MVCConfigurationExtensions
     {
         /// <summary>
-        /// Setup MVC extension for Grace (Controller activtor, View activator, MVC data as dependency)
+        /// Setup MVC extension for Grace (Controller activator, View activator, MVC data as dependency)
         /// </summary>
         /// <param name="scope">injection scope to setup </param>
         /// <param name="configure">configuration action</param>
