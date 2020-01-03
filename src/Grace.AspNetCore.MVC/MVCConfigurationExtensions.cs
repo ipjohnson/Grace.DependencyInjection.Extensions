@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.ViewComponents;
 using System;
-using Grace.AspNetCore.MVC.Inspector;
 
 namespace Grace.AspNetCore.MVC
 {
@@ -18,7 +17,6 @@ namespace Grace.AspNetCore.MVC
         {
             UseControllerActivator = true;
             UseViewActivator = true;
-            SupportHttpInfoInjection = true;
         }
 
         /// <summary>
@@ -29,12 +27,7 @@ namespace Grace.AspNetCore.MVC
         /// <summary>
         /// Use custom view activator
         /// </summary>
-        public bool UseViewActivator { get; set; }
-        
-        /// <summary>
-        /// Support injecting http info as dependency
-        /// </summary>
-        public bool SupportHttpInfoInjection { get; set; }        
+        public bool UseViewActivator { get; set; }       
     }
 
     /// <summary>
@@ -55,12 +48,6 @@ namespace Grace.AspNetCore.MVC
             
             scope.Configure(c =>
             {
-                if (configuration.SupportHttpInfoInjection)
-                {
-                    c.AddInspector(new BindingSourceAttributePropertyInspector());
-                    c.AddInjectionValueProvider(new BindingSourceMetadataValueProvider());
-                }
-                
                 if (configuration.UseControllerActivator)
                 {
                     c.Export<GraceControllerActivator>().As<IControllerActivator>().WithPriority(10).Lifestyle.Singleton();
