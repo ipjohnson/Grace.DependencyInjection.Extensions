@@ -4,7 +4,7 @@
     <Description>ASP.Net Core DI extension for Grace container</Description>
     <VersionPrefix>6.0.3</VersionPrefix>
     <Authors>Ian Johnson</Authors>
-    <TargetFrameworks>netstandard1.0;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>Grace.DependencyInjection.Extensions</AssemblyName>
     <AssemblyOriginatorKeyFile>../Grace.snk</AssemblyOriginatorKeyFile>
@@ -35,15 +35,7 @@
 
   <ItemGroup>
     <PackageReference Include="Grace" Version="7.0.0" />
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard1.0'">
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="1.1.1" />
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.2.0" />
-    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.1.1" />
   </ItemGroup>
 
 </Project>
