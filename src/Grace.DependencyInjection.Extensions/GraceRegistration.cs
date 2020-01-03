@@ -50,6 +50,7 @@ namespace Grace.DependencyInjection.Extensions
                 {
 #if NETSTANDARD2_0
                     var instanceType = descriptor.ImplementationInstance.GetType();
+
                     if (instanceType.IsConstructedGenericType)
                     {
                         var type = instanceType;
@@ -66,11 +67,16 @@ namespace Grace.DependencyInjection.Extensions
                         if (type != null && type.IsConstructedGenericType)
                         {
                             var nameProperty = instanceType.GetProperty("Name");
-                            var name = nameProperty.GetValue(descriptor.ImplementationInstance);
-                            c.ExportInstance(descriptor.ImplementationInstance)
-                                .AsKeyed(descriptor.ServiceType, name)
-                                .ConfigureLifetime(descriptor.Lifetime);
-                            continue;
+                            var name = nameProperty?.GetValue(descriptor.ImplementationInstance)?.ToString();
+
+                            // we only want to export as keyed if they are named
+                            if (!string.IsNullOrEmpty(name))
+                            {
+                                c.ExportInstance(descriptor.ImplementationInstance)
+                                    .AsKeyed(descriptor.ServiceType, name)
+                                    .ConfigureLifetime(descriptor.Lifetime);
+                                continue;
+                            }
                         }
                     }
 #endif
@@ -112,7 +118,7 @@ namespace Grace.DependencyInjection.Extensions
         /// <summary>
         /// Service provider for Grace
         /// </summary>
-        private class GraceServiceProvider : IServiceProvider,  IDisposable
+        private class GraceServiceProvider : IServiceProvider, IDisposable
         {
             private readonly IExportLocatorScope _injectionScope;
 
