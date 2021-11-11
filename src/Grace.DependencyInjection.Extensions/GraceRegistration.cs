@@ -2,6 +2,10 @@
 using System.Collections.Generic;
 using Microsoft.Extensions.DependencyInjection;
 
+#if NET5_0
+using System.Threading.Tasks;
+#endif
+
 namespace Grace.DependencyInjection.Extensions
 {
     /// <summary>
@@ -14,7 +18,8 @@ namespace Grace.DependencyInjection.Extensions
         /// </summary>
         /// <param name="exportLocator">export locator</param>
         /// <param name="descriptors">descriptors</param>
-        public static IServiceProvider Populate(this IInjectionScope exportLocator, IEnumerable<ServiceDescriptor> descriptors)
+        public static IServiceProvider Populate(this IInjectionScope exportLocator,
+            IEnumerable<ServiceDescriptor> descriptors)
         {
             exportLocator.Configure(c =>
             {
@@ -33,26 +38,27 @@ namespace Grace.DependencyInjection.Extensions
             {
                 if (descriptor.ImplementationType != null)
                 {
-                    c.Export(descriptor.ImplementationType).
-                      As(descriptor.ServiceType).
-                      ConfigureLifetime(descriptor.Lifetime);
+                    c.Export(descriptor.ImplementationType)
+                        .As(descriptor.ServiceType)
+                        .ConfigureLifetime(descriptor.Lifetime);
                 }
                 else if (descriptor.ImplementationFactory != null)
                 {
-                    c.ExportFactory(descriptor.ImplementationFactory).
-                        As(descriptor.ServiceType).
-                        ConfigureLifetime(descriptor.Lifetime);
+                    c.ExportFactory(descriptor.ImplementationFactory)
+                        .As(descriptor.ServiceType)
+                        .ConfigureLifetime(descriptor.Lifetime);
                 }
                 else
                 {
-                    c.ExportInstance(descriptor.ImplementationInstance).
-                      As(descriptor.ServiceType).
-                      ConfigureLifetime(descriptor.Lifetime);
+                    c.ExportInstance(descriptor.ImplementationInstance)
+                        .As(descriptor.ServiceType)
+                        .ConfigureLifetime(descriptor.Lifetime);
                 }
             }
         }
 
-        private static IFluentExportStrategyConfiguration ConfigureLifetime(this IFluentExportStrategyConfiguration configuration, ServiceLifetime lifetime)
+        private static IFluentExportStrategyConfiguration ConfigureLifetime(
+            this IFluentExportStrategyConfiguration configuration, ServiceLifetime lifetime)
         {
             switch (lifetime)
             {
@@ -66,7 +72,8 @@ namespace Grace.DependencyInjection.Extensions
             return configuration;
         }
 
-        private static IFluentExportInstanceConfiguration<T> ConfigureLifetime<T>(this IFluentExportInstanceConfiguration<T> configuration, ServiceLifetime lifecycleKind)
+        private static IFluentExportInstanceConfiguration<T> ConfigureLifetime<T>(
+            this IFluentExportInstanceConfiguration<T> configuration, ServiceLifetime lifecycleKind)
         {
             switch (lifecycleKind)
             {
@@ -83,7 +90,12 @@ namespace Grace.DependencyInjection.Extensions
         /// <summary>
         /// Service provider for Grace
         /// </summary>
-        private class GraceServiceProvider : IServiceProvider, IDisposable
+        private class GraceServiceProvider 
+            : IServiceProvider
+            , IDisposable
+#if NET5_0
+            , IAsyncDisposable
+#endif
         {
             private readonly IExportLocatorScope _injectionScope;
 
@@ -110,6 +122,14 @@ namespace Grace.DependencyInjection.Extensions
             {
                 _injectionScope.Dispose();
             }
+
+#if NET5_0
+            /// <summary>Asynchonously performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>
+            public ValueTask DisposeAsync()
+            {
+                return _injectionScope.DisposeAsync();
+            }
+#endif
         }
 
         /// <summary>
@@ -149,6 +169,9 @@ namespace Grace.DependencyInjection.Extensions
         /// Grace service scope
         /// </summary>
         private class GraceServiceScope : IServiceScope
+#if NET5_0
+            , IAsyncDisposable
+#endif
         {
             private readonly IExportLocatorScope _injectionScope;
 
@@ -173,6 +196,14 @@ namespace Grace.DependencyInjection.Extensions
             {
                 _injectionScope.Dispose();
             }
+
+#if NET5_0
+            // This code added to correctly and asynchronously implement the disposable pattern.
+            public ValueTask DisposeAsync()
+            {
+                return _injectionScope.DisposeAsync();
+            }
+#endif
         }
     }
 }
