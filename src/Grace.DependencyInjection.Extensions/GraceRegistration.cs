@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.Extensions.DependencyInjection;
 
-#if NET5_0
+#if NET6_0
 using System.Threading.Tasks;
 #endif
 
@@ -23,10 +23,15 @@ namespace Grace.DependencyInjection.Extensions
         {
             exportLocator.Configure(c =>
             {
+#if NET6_0
+                c.Export<ServiceProviderIsServiceImpl>().As<IServiceProviderIsService>();
+#endif
+
                 c.ExcludeTypeFromAutoRegistration(nameof(Microsoft) + ".*");
                 c.Export<GraceServiceProvider>().As<IServiceProvider>().ExternallyOwned();
                 c.Export<GraceLifetimeScopeServiceScopeFactory>().As<IServiceScopeFactory>();
                 Register(c, descriptors);
+
             });
 
             return exportLocator.Locate<IServiceProvider>();
@@ -93,7 +98,7 @@ namespace Grace.DependencyInjection.Extensions
         private class GraceServiceProvider 
             : IServiceProvider
             , IDisposable
-#if NET5_0
+#if NET6_0
             , IAsyncDisposable
 #endif
         {
@@ -123,7 +128,7 @@ namespace Grace.DependencyInjection.Extensions
                 _injectionScope.Dispose();
             }
 
-#if NET5_0
+#if NET6_0
             /// <summary>Asynchonously performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>
             public ValueTask DisposeAsync()
             {
@@ -169,7 +174,7 @@ namespace Grace.DependencyInjection.Extensions
         /// Grace service scope
         /// </summary>
         private class GraceServiceScope : IServiceScope
-#if NET5_0
+#if NET6_0
             , IAsyncDisposable
 #endif
         {
@@ -197,7 +202,7 @@ namespace Grace.DependencyInjection.Extensions
                 _injectionScope.Dispose();
             }
 
-#if NET5_0
+#if NET6_0
             // This code added to correctly and asynchronously implement the disposable pattern.
             public ValueTask DisposeAsync()
             {
@@ -205,5 +210,29 @@ namespace Grace.DependencyInjection.Extensions
             }
 #endif
         }
+
+
+#if NET6_0
+        private class ServiceProviderIsServiceImpl : IServiceProviderIsService
+        {
+            private readonly IExportLocatorScope exportLocatorScope;
+
+            public ServiceProviderIsServiceImpl(IExportLocatorScope exportLocatorScope)
+            {
+                this.exportLocatorScope = exportLocatorScope;
+            }
+
+            public bool IsService(Type serviceType)
+            {
+                if (serviceType.IsGenericTypeDefinition)
+                {
+                    return false;
+                }
+
+                return exportLocatorScope.CanLocate(serviceType);
+            }
+        }
+#endif
     }
+
 }
