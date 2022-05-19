@@ -29,7 +29,7 @@ namespace Grace.DependencyInjection.Extensions
 
                 c.ExcludeTypeFromAutoRegistration(nameof(Microsoft) + ".*");
                 c.Export<GraceServiceProvider>().As<IServiceProvider>().ExternallyOwned();
-                c.Export<GraceLifetimeScopeServiceScopeFactory>().As<IServiceScopeFactory>();
+                c.Export<GraceLifetimeScopeServiceScopeFactory>().As<IServiceScopeFactory>().Lifestyle.Singleton();
                 Register(c, descriptors);
 
             });
