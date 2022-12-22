@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Grace.DependencyInjection;
-using Grace.DependencyInjection.Extensions;
+﻿using Grace.DependencyInjection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -21,8 +16,7 @@ namespace Grace.AspNetCore.Hosting
         /// <param name="builder"></param>
         /// <param name="configuration"></param>
         /// <returns></returns>
-        public static IHostBuilder UseGrace(this IHostBuilder builder,
-            IInjectionScopeConfiguration configuration = null)
+        public static IHostBuilder UseGrace(this IHostBuilder builder, IInjectionScopeConfiguration configuration = null)
         {
             return builder.UseServiceProviderFactory(new GraceServiceProviderFactory(configuration));
         }
@@ -33,11 +27,9 @@ namespace Grace.AspNetCore.Hosting
         /// <param name="builder"></param>
         /// <param name="configuration"></param>
         /// <returns></returns>
-        public static IWebHostBuilder UseGrace(this IWebHostBuilder builder,
-            IInjectionScopeConfiguration configuration = null)
+        public static IWebHostBuilder UseGrace(this IWebHostBuilder builder, IInjectionScopeConfiguration configuration = null)
         {
             return builder.ConfigureServices(c => c.AddSingleton<IServiceProviderFactory<IInjectionScope>>(new GraceServiceProviderFactory(configuration)));
         }
-
     }
 }
