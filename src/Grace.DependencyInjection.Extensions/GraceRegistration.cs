@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.DependencyInjection;
-
-#if NET6_0
+#if NET6_0_OR_GREATER
 using System.Threading.Tasks;
 #endif
 
@@ -23,10 +22,9 @@ namespace Grace.DependencyInjection.Extensions
         {
             exportLocator.Configure(c =>
             {
-#if NET6_0
+#if NET6_0_OR_GREATER
                 c.Export<ServiceProviderIsServiceImpl>().As<IServiceProviderIsService>();
 #endif
-
                 c.ExcludeTypeFromAutoRegistration(nameof(Microsoft) + ".*");
                 c.Export<GraceServiceProvider>().As<IServiceProvider>().ExternallyOwned();
                 c.Export<GraceLifetimeScopeServiceScopeFactory>().As<IServiceScopeFactory>().Lifestyle.Singleton();
@@ -95,10 +93,10 @@ namespace Grace.DependencyInjection.Extensions
         /// <summary>
         /// Service provider for Grace
         /// </summary>
-        private class GraceServiceProvider 
+        private sealed class GraceServiceProvider 
             : IServiceProvider
             , IDisposable
-#if NET6_0
+#if NET6_0_OR_GREATER
             , IAsyncDisposable
 #endif
         {
@@ -128,8 +126,8 @@ namespace Grace.DependencyInjection.Extensions
                 _injectionScope.Dispose();
             }
 
-#if NET6_0
-            /// <summary>Asynchonously performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>
+#if NET6_0_OR_GREATER
+            /// <summary>Asynchronously performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>
             public ValueTask DisposeAsync()
             {
                 return _injectionScope.DisposeAsync();
@@ -140,7 +138,7 @@ namespace Grace.DependencyInjection.Extensions
         /// <summary>
         /// Service scope factory that uses grace
         /// </summary>
-        private class GraceLifetimeScopeServiceScopeFactory : IServiceScopeFactory
+        private sealed class GraceLifetimeScopeServiceScopeFactory : IServiceScopeFactory
         {
             private readonly IExportLocatorScope _injectionScope;
 
@@ -173,8 +171,8 @@ namespace Grace.DependencyInjection.Extensions
         /// <summary>
         /// Grace service scope
         /// </summary>
-        private class GraceServiceScope : IServiceScope
-#if NET6_0
+        private sealed class GraceServiceScope : IServiceScope
+#if NET6_0_OR_GREATER
             , IAsyncDisposable
 #endif
         {
@@ -202,7 +200,7 @@ namespace Grace.DependencyInjection.Extensions
                 _injectionScope.Dispose();
             }
 
-#if NET6_0
+#if NET6_0_OR_GREATER
             // This code added to correctly and asynchronously implement the disposable pattern.
             public ValueTask DisposeAsync()
             {
@@ -211,15 +209,14 @@ namespace Grace.DependencyInjection.Extensions
 #endif
         }
 
-
-#if NET6_0
-        private class ServiceProviderIsServiceImpl : IServiceProviderIsService
+#if NET6_0_OR_GREATER
+        private sealed class ServiceProviderIsServiceImpl : IServiceProviderIsService
         {
-            private readonly IExportLocatorScope exportLocatorScope;
+            private readonly IExportLocatorScope _exportLocatorScope;
 
             public ServiceProviderIsServiceImpl(IExportLocatorScope exportLocatorScope)
             {
-                this.exportLocatorScope = exportLocatorScope;
+                _exportLocatorScope = exportLocatorScope;
             }
 
             public bool IsService(Type serviceType)
@@ -229,10 +226,9 @@ namespace Grace.DependencyInjection.Extensions
                     return false;
                 }
 
-                return exportLocatorScope.CanLocate(serviceType);
+                return _exportLocatorScope.CanLocate(serviceType);
             }
         }
 #endif
     }
-
 }
