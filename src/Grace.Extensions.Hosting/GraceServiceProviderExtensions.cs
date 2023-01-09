@@ -1,7 +1,4 @@
-﻿using System;
-using Grace.DependencyInjection;
-using Grace.DependencyInjection.Extensions;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Grace.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
 namespace Grace.Extensions.Hosting

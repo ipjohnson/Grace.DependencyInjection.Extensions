@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Grace.DependencyInjection;
-using Grace.DependencyInjection.Extensions;
+﻿using Grace.DependencyInjection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -38,6 +33,5 @@ namespace Grace.AspNetCore.Hosting
         {
             return builder.ConfigureServices(c => c.AddSingleton<IServiceProviderFactory<IInjectionScope>>(new GraceServiceProviderFactory(configuration)));
         }
-
     }
 }
