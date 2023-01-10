@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
 namespace Grace.DependencyInjection.Extensions.Tests
@@ -22,9 +17,11 @@ namespace Grace.DependencyInjection.Extensions.Tests
 
             Assert.Same(serviceScopeFactory1, serviceScopeFactory2);
 
-            using var scope = provider.CreateScope();
-
-            var serviceScopeFactory3 = scope.ServiceProvider.GetRequiredService<IServiceScopeFactory>();
+            IServiceScopeFactory serviceScopeFactory3;
+            using (var scope = provider.CreateScope())
+            {
+                serviceScopeFactory3 = scope.ServiceProvider.GetRequiredService<IServiceScopeFactory>();
+            }
 
             Assert.Same(serviceScopeFactory1, serviceScopeFactory3);
         }
@@ -36,15 +33,17 @@ namespace Grace.DependencyInjection.Extensions.Tests
 
             var provider = serviceContainer.Populate(new ServiceCollection());
 
-            using var scope = provider.CreateScope();
+            using (var scope = provider.CreateScope())
+            {
+                var exportLocator = scope.ServiceProvider.GetRequiredService<IExportLocatorScope>();
+                Assert.Same(serviceContainer, exportLocator.Parent);
 
-            var exportLocator = scope.ServiceProvider.GetRequiredService<IExportLocatorScope>();
-            Assert.Same(serviceContainer, exportLocator.Parent);
-
-            using var nestedScope = scope.ServiceProvider.CreateScope();
-
-            var exportLocator2 = nestedScope.ServiceProvider.GetRequiredService<IExportLocatorScope>();
-            Assert.Same(serviceContainer, exportLocator2.Parent);
+                using (var nestedScope = scope.ServiceProvider.CreateScope())
+                {
+                    var exportLocator2 = nestedScope.ServiceProvider.GetRequiredService<IExportLocatorScope>();
+                    Assert.Same(serviceContainer, exportLocator2.Parent);
+                }
+            }
         }
     }
 }

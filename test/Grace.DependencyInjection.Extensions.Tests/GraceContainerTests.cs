@@ -1,12 +1,10 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Specification;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Grace.DependencyInjection.Extensions.Tests
 {
+#if NET6_0_OR_GREATER
     public class GraceContainerTests : DependencyInjectionSpecificationTests
     {
         protected override IServiceProvider CreateServiceProvider(IServiceCollection serviceCollection)
@@ -16,4 +14,5 @@ namespace Grace.DependencyInjection.Extensions.Tests
             return  container.Populate(serviceCollection);
         }
     }
+#endif
 }
