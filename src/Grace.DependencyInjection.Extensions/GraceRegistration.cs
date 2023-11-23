@@ -40,23 +40,47 @@ namespace Grace.DependencyInjection.Extensions
         {
             foreach (var descriptor in descriptors)
             {
-                if (descriptor.ImplementationType != null)
+                if (descriptor.IsKeyedService)
                 {
-                    c.Export(descriptor.ImplementationType)
-                        .As(descriptor.ServiceType)
-                        .ConfigureLifetime(descriptor.Lifetime);
-                }
-                else if (descriptor.ImplementationFactory != null)
-                {
-                    c.ExportFactory(descriptor.ImplementationFactory)
-                        .As(descriptor.ServiceType)
-                        .ConfigureLifetime(descriptor.Lifetime);
+                    if (descriptor.KeyedImplementationType != null)
+                    {
+                        c.Export(descriptor.KeyedImplementationType)
+                            .AsKeyed(descriptor.ServiceType, descriptor.ServiceKey)
+                            .ConfigureLifetime(descriptor.Lifetime);
+                    }
+                    else if (descriptor.KeyedImplementationFactory != null)
+                    {
+                        c.ExportFactory(descriptor.KeyedImplementationFactory)
+                            .AsKeyed(descriptor.ServiceType, descriptor.ServiceKey)
+                            .ConfigureLifetime(descriptor.Lifetime);
+                    }
+                    else
+                    {
+                        c.ExportInstance(descriptor.KeyedImplementationInstance)
+                            .AsKeyed(descriptor.ServiceType, descriptor.ServiceKey)
+                            .ConfigureLifetime(descriptor.Lifetime);
+                    }
                 }
                 else
                 {
-                    c.ExportInstance(descriptor.ImplementationInstance)
-                        .As(descriptor.ServiceType)
-                        .ConfigureLifetime(descriptor.Lifetime);
+                    if (descriptor.ImplementationType != null)
+                    {
+                        c.Export(descriptor.ImplementationType)
+                            .As(descriptor.ServiceType)
+                            .ConfigureLifetime(descriptor.Lifetime);
+                    }
+                    else if (descriptor.ImplementationFactory != null)
+                    {
+                        c.ExportFactory(descriptor.ImplementationFactory)
+                            .As(descriptor.ServiceType)
+                            .ConfigureLifetime(descriptor.Lifetime);
+                    }
+                    else
+                    {
+                        c.ExportInstance(descriptor.ImplementationInstance)
+                            .As(descriptor.ServiceType)
+                            .ConfigureLifetime(descriptor.Lifetime);
+                    }
                 }
             }
         }
@@ -94,7 +118,7 @@ namespace Grace.DependencyInjection.Extensions
         /// <summary>
         /// Service provider for Grace
         /// </summary>
-        private class GraceServiceProvider 
+        private class GraceServiceProvider
             : IServiceProvider
             , IDisposable
 #if NET6_0_OR_GREATER
