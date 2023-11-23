@@ -23,7 +23,9 @@ namespace Grace.DependencyInjection.Extensions
             exportLocator.Configure(c =>
             {
 #if NET6_0_OR_GREATER
-                c.Export<ServiceProviderIsServiceImpl>().As<IServiceProviderIsService>();
+                c.Export<ServiceProviderIsServiceImpl>()
+                    .As<IServiceProviderIsService>()
+                    .As<IServiceProviderIsKeyedService>();
 #endif
 
                 c.ExcludeTypeFromAutoRegistration(nameof(Microsoft) + ".*");
@@ -119,7 +121,7 @@ namespace Grace.DependencyInjection.Extensions
         /// Service provider for Grace
         /// </summary>
         private class GraceServiceProvider
-            : IServiceProvider
+            : IKeyedServiceProvider
             , IDisposable
 #if NET6_0_OR_GREATER
             , IAsyncDisposable
@@ -143,6 +145,18 @@ namespace Grace.DependencyInjection.Extensions
             public object GetService(Type serviceType)
             {
                 return _injectionScope.LocateOrDefault(serviceType, null);
+            }
+
+            public object GetKeyedService(Type serviceType, object serviceKey)
+            {
+                return _injectionScope.TryLocate(serviceType, out var service, withKey: serviceKey)
+                    ? service
+                    : null;
+            }
+
+            public object GetRequiredKeyedService(Type serviceType, object serviceKey)
+            {
+                return _injectionScope.Locate(serviceType, withKey: serviceKey);
             }
 
             /// <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>
@@ -236,7 +250,7 @@ namespace Grace.DependencyInjection.Extensions
 
 
 #if NET6_0_OR_GREATER
-        private class ServiceProviderIsServiceImpl : IServiceProviderIsService
+        private class ServiceProviderIsServiceImpl : IServiceProviderIsKeyedService
         {
             private readonly IExportLocatorScope _exportLocatorScope;
 
@@ -253,6 +267,16 @@ namespace Grace.DependencyInjection.Extensions
                 }
 
                 return _exportLocatorScope.CanLocate(serviceType);
+            }
+
+            public bool IsKeyedService(Type serviceType, object serviceKey)
+            {
+                if (serviceType.IsGenericTypeDefinition)
+                {
+                    return false;
+                }
+
+                return _exportLocatorScope.CanLocate(serviceType, key: serviceKey);
             }
         }
 #endif
