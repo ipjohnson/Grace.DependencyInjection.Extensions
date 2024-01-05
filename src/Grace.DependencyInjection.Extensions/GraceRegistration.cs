@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 #endif
 using Microsoft.Extensions.DependencyInjection;
+using Grace.DependencyInjection.Attributes.Interfaces;
 
 namespace Grace.DependencyInjection.Extensions
 {
@@ -12,6 +13,15 @@ namespace Grace.DependencyInjection.Extensions
     /// </summary>
     public static class GraceRegistration
     {
+        static GraceRegistration()
+        {
+            ImportAttributeInfo.RegisterImportAttributeAdapter<FromKeyedServicesAttribute>((attr, type, memberName) 
+                => new ImportAttributeInfo { ImportKey = ((FromKeyedServicesAttribute)attr).Key });
+
+            ImportAttributeInfo.RegisterImportAttributeAdapter<ServiceKeyAttribute>((attr, type, memberName) 
+                => new ImportAttributeInfo { ImportKey = ImportKey.Key });
+        }
+
         /// <summary>
         /// Populate a container with service descriptors
         /// </summary>
@@ -44,22 +54,26 @@ namespace Grace.DependencyInjection.Extensions
             {
                 if (descriptor.IsKeyedService)
                 {
+                    var key = descriptor.ServiceKey == KeyedService.AnyKey
+                        ? ImportKey.Any
+                        : descriptor.ServiceKey;
+
                     if (descriptor.KeyedImplementationType != null)
                     {
                         c.Export(descriptor.KeyedImplementationType)
-                            .AsKeyed(descriptor.ServiceType, descriptor.ServiceKey)
+                            .AsKeyed(descriptor.ServiceType, key)
                             .ConfigureLifetime(descriptor.Lifetime);
                     }
                     else if (descriptor.KeyedImplementationFactory != null)
                     {
                         c.ExportFactory(descriptor.KeyedImplementationFactory)
-                            .AsKeyed(descriptor.ServiceType, descriptor.ServiceKey)
+                            .AsKeyed(descriptor.ServiceType, key)
                             .ConfigureLifetime(descriptor.Lifetime);
                     }
                     else
                     {
                         c.ExportInstance(descriptor.KeyedImplementationInstance)
-                            .AsKeyed(descriptor.ServiceType, descriptor.ServiceKey)
+                            .AsKeyed(descriptor.ServiceType, key)
                             .ConfigureLifetime(descriptor.Lifetime);
                     }
                 }
