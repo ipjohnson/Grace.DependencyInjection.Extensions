@@ -4,7 +4,6 @@ using System;
 
 namespace Grace.DependencyInjection.Extensions.Tests
 {
-#if NET6_0_OR_GREATER
     public class GraceKeyedContainerTests : KeyedDependencyInjectionSpecificationTests
     {
         protected override IServiceProvider CreateServiceProvider(IServiceCollection serviceCollection)
@@ -14,5 +13,4 @@ namespace Grace.DependencyInjection.Extensions.Tests
             return container.Populate(serviceCollection);
         }
     }
-#endif
 }

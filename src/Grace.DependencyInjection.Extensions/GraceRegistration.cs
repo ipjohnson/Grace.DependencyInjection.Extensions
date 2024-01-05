@@ -32,17 +32,14 @@ namespace Grace.DependencyInjection.Extensions
         {
             exportLocator.Configure(c =>
             {
-#if NET6_0_OR_GREATER
                 c.Export<ServiceProviderIsServiceImpl>()
                     .As<IServiceProviderIsService>()
                     .As<IServiceProviderIsKeyedService>();
-#endif
 
                 c.ExcludeTypeFromAutoRegistration(nameof(Microsoft) + ".*");
                 c.Export<GraceServiceProvider>().As<IServiceProvider>().ExternallyOwned();
                 c.Export<GraceLifetimeScopeServiceScopeFactory>().As<IServiceScopeFactory>().Lifestyle.Singleton();
                 Register(c, descriptors);
-
             });
 
             return exportLocator.Locate<IServiceProvider>();
@@ -111,9 +108,10 @@ namespace Grace.DependencyInjection.Extensions
 
                 case ServiceLifetime.Singleton:
                     return configuration.Lifestyle.Singleton();
-            }
 
-            return configuration;
+                default:
+                    return configuration;
+            }
         }
 
         private static IFluentExportInstanceConfiguration<T> ConfigureLifetime<T>(
@@ -126,9 +124,10 @@ namespace Grace.DependencyInjection.Extensions
 
                 case ServiceLifetime.Singleton:
                     return configuration.Lifestyle.Singleton();
-            }
 
-            return configuration;
+                default:
+                    return configuration;
+            }
         }
 
         /// <summary>
@@ -262,8 +261,6 @@ namespace Grace.DependencyInjection.Extensions
 #endif
         }
 
-
-#if NET6_0_OR_GREATER
         private class ServiceProviderIsServiceImpl : IServiceProviderIsKeyedService
         {
             private readonly IExportLocatorScope _exportLocatorScope;
@@ -293,7 +290,5 @@ namespace Grace.DependencyInjection.Extensions
                 return _exportLocatorScope.CanLocate(serviceType, key: serviceKey);
             }
         }
-#endif
     }
-
 }
