@@ -101,33 +101,23 @@ namespace Grace.DependencyInjection.Extensions
         private static IFluentExportStrategyConfiguration ConfigureLifetime(
             this IFluentExportStrategyConfiguration configuration, ServiceLifetime lifetime)
         {
-            switch (lifetime)
+            return lifetime switch
             {
-                case ServiceLifetime.Scoped:
-                    return configuration.Lifestyle.SingletonPerScope();
-
-                case ServiceLifetime.Singleton:
-                    return configuration.Lifestyle.Singleton();
-
-                default:
-                    return configuration;
-            }
+                ServiceLifetime.Scoped => configuration.Lifestyle.SingletonPerScope(),
+                ServiceLifetime.Singleton => configuration.Lifestyle.Singleton(),
+                _ => configuration,
+            };
         }
 
         private static IFluentExportInstanceConfiguration<T> ConfigureLifetime<T>(
             this IFluentExportInstanceConfiguration<T> configuration, ServiceLifetime lifecycleKind)
         {
-            switch (lifecycleKind)
+            return lifecycleKind switch
             {
-                case ServiceLifetime.Scoped:
-                    return configuration.Lifestyle.SingletonPerScope();
-
-                case ServiceLifetime.Singleton:
-                    return configuration.Lifestyle.Singleton();
-
-                default:
-                    return configuration;
-            }
+                ServiceLifetime.Scoped => configuration.Lifestyle.SingletonPerScope(),
+                ServiceLifetime.Singleton => configuration.Lifestyle.Singleton(),
+                _ => configuration,
+            };
         }
 
         /// <summary>
@@ -272,22 +262,16 @@ namespace Grace.DependencyInjection.Extensions
 
             public bool IsService(Type serviceType)
             {
-                if (serviceType.IsGenericTypeDefinition)
-                {
-                    return false;
-                }
-
-                return _exportLocatorScope.CanLocate(serviceType);
+                return serviceType.IsGenericTypeDefinition
+                    ? false
+                    : _exportLocatorScope.CanLocate(serviceType);
             }
 
             public bool IsKeyedService(Type serviceType, object serviceKey)
             {
-                if (serviceType.IsGenericTypeDefinition)
-                {
-                    return false;
-                }
-
-                return _exportLocatorScope.CanLocate(serviceType, key: serviceKey);
+                return serviceType.IsGenericTypeDefinition 
+                    ? false 
+                    : _exportLocatorScope.CanLocate(serviceType, key: serviceKey);
             }
         }
     }

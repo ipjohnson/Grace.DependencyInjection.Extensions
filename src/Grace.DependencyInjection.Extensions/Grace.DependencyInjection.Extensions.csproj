@@ -3,7 +3,6 @@
   <PropertyGroup>
     <Description>ASP.Net Core DI extension for Grace container</Description>
     <VersionPrefix>6.0.3</VersionPrefix>
-    <Authors>Ian Johnson</Authors>
     <TargetFrameworks>net462;net6.0</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>Grace.DependencyInjection.Extensions</AssemblyName>
