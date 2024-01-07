@@ -223,7 +223,12 @@ namespace Grace.DependencyInjection.Extensions
             , IAsyncDisposable
 #endif
         {
-            private readonly IExportLocatorScope _injectionScope;
+            private readonly GraceServiceProvider _serviceProvider;
+
+            /// <summary>
+            /// Service provider
+            /// </summary>
+            public IServiceProvider ServiceProvider => _serviceProvider;            
 
             /// <summary>
             /// Default constructor
@@ -231,28 +236,17 @@ namespace Grace.DependencyInjection.Extensions
             /// <param name="injectionScope"></param>
             public GraceServiceScope(IExportLocatorScope injectionScope)
             {
-                _injectionScope = injectionScope;
-
-                ServiceProvider = injectionScope;
+                // Need to wrap IServiceProvider to implement 
+                // MS extensions interface IKeyedServiceProvider 
+                _serviceProvider = new GraceServiceProvider(injectionScope);
             }
-
-            /// <summary>
-            /// Service provider
-            /// </summary>
-            public IServiceProvider ServiceProvider { get; }
 
             // This code added to correctly implement the disposable pattern.
-            public void Dispose()
-            {
-                _injectionScope.Dispose();
-            }
+            public void Dispose() => _serviceProvider.Dispose();
 
 #if NET6_0_OR_GREATER
             // This code added to correctly and asynchronously implement the disposable pattern.
-            public ValueTask DisposeAsync()
-            {
-                return _injectionScope.DisposeAsync();
-            }
+            public ValueTask DisposeAsync() => _serviceProvider.DisposeAsync();
 #endif
         }
 
