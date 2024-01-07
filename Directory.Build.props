@@ -1,0 +1,6 @@
+<Project>
+  <PropertyGroup>
+    <Authors>Ian Johnson</Authors>    
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+</Project>

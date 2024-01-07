@@ -3,7 +3,6 @@
   <PropertyGroup>
     <Description>ASP.Net Core DI extension for Grace container</Description>
     <VersionPrefix>6.0.3</VersionPrefix>
-    <Authors>Ian Johnson</Authors>
     <TargetFrameworks>net462;net6.0</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>Grace.DependencyInjection.Extensions</AssemblyName>
@@ -34,8 +33,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Grace" Version="8.0.0-RC837" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0" />
+    <PackageReference Include="Grace" Version="8.0.0-RC838" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0" />
   </ItemGroup>
 
 </Project>

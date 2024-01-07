@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 #endif
 using Microsoft.Extensions.DependencyInjection;
+using Grace.DependencyInjection.Attributes;
+using Grace.DependencyInjection.Attributes.Interfaces;
 
 namespace Grace.DependencyInjection.Extensions
 {
@@ -12,6 +14,15 @@ namespace Grace.DependencyInjection.Extensions
     /// </summary>
     public static class GraceRegistration
     {
+        static GraceRegistration()
+        {
+            ImportAttributeInfo.RegisterImportAttributeAdapter<FromKeyedServicesAttribute>((attr, type, memberName) 
+                => new ImportAttributeInfo { ImportKey = ((FromKeyedServicesAttribute)attr).Key });
+
+            ImportAttributeInfo.RegisterImportAttributeAdapter<ServiceKeyAttribute>((attr, type, memberName) 
+                => new ImportAttributeInfo { ImportKey = ImportKey.Key });
+        }
+
         /// <summary>
         /// Populate a container with service descriptors
         /// </summary>
@@ -22,15 +33,14 @@ namespace Grace.DependencyInjection.Extensions
         {
             exportLocator.Configure(c =>
             {
-#if NET6_0_OR_GREATER
-                c.Export<ServiceProviderIsServiceImpl>().As<IServiceProviderIsService>();
-#endif
+                c.Export<ServiceProviderIsServiceImpl>()
+                    .As<IServiceProviderIsService>()
+                    .As<IServiceProviderIsKeyedService>();
 
                 c.ExcludeTypeFromAutoRegistration(nameof(Microsoft) + ".*");
                 c.Export<GraceServiceProvider>().As<IServiceProvider>().ExternallyOwned();
                 c.Export<GraceLifetimeScopeServiceScopeFactory>().As<IServiceScopeFactory>().Lifestyle.Singleton();
                 Register(c, descriptors);
-
             });
 
             return exportLocator.Locate<IServiceProvider>();
@@ -40,23 +50,55 @@ namespace Grace.DependencyInjection.Extensions
         {
             foreach (var descriptor in descriptors)
             {
-                if (descriptor.ImplementationType != null)
+                if (descriptor.IsKeyedService)
                 {
-                    c.Export(descriptor.ImplementationType)
-                        .As(descriptor.ServiceType)
-                        .ConfigureLifetime(descriptor.Lifetime);
-                }
-                else if (descriptor.ImplementationFactory != null)
-                {
-                    c.ExportFactory(descriptor.ImplementationFactory)
-                        .As(descriptor.ServiceType)
-                        .ConfigureLifetime(descriptor.Lifetime);
+                    var key = descriptor.ServiceKey == KeyedService.AnyKey
+                        ? ImportKey.Any
+                        : descriptor.ServiceKey;
+
+                    if (descriptor.KeyedImplementationType != null)
+                    {
+                        c.Export(descriptor.KeyedImplementationType)
+                            .AsKeyed(descriptor.ServiceType, key)
+                            .ConfigureLifetime(descriptor.Lifetime);
+                    }
+                    else if (descriptor.KeyedImplementationFactory != null)
+                    {
+                        // Adds [ImportKey] on second parameter so that Grace DelegateWrapperStrategy will pass the imported key
+                        var factory = (IServiceProvider services, [ImportKey] object key) => 
+                            descriptor.KeyedImplementationFactory(services, key);
+
+                        c.ExportFactory(factory)
+                            .AsKeyed(descriptor.ServiceType, key)
+                            .ConfigureLifetime(descriptor.Lifetime);
+                    }
+                    else
+                    {
+                        c.ExportInstance(descriptor.KeyedImplementationInstance)
+                            .AsKeyed(descriptor.ServiceType, key)
+                            .ConfigureLifetime(descriptor.Lifetime);
+                    }
                 }
                 else
                 {
-                    c.ExportInstance(descriptor.ImplementationInstance)
-                        .As(descriptor.ServiceType)
-                        .ConfigureLifetime(descriptor.Lifetime);
+                    if (descriptor.ImplementationType != null)
+                    {
+                        c.Export(descriptor.ImplementationType)
+                            .As(descriptor.ServiceType)
+                            .ConfigureLifetime(descriptor.Lifetime);
+                    }
+                    else if (descriptor.ImplementationFactory != null)
+                    {
+                        c.ExportFactory(descriptor.ImplementationFactory)
+                            .As(descriptor.ServiceType)
+                            .ConfigureLifetime(descriptor.Lifetime);
+                    }
+                    else
+                    {
+                        c.ExportInstance(descriptor.ImplementationInstance)
+                            .As(descriptor.ServiceType)
+                            .ConfigureLifetime(descriptor.Lifetime);
+                    }
                 }
             }
         }
@@ -64,38 +106,30 @@ namespace Grace.DependencyInjection.Extensions
         private static IFluentExportStrategyConfiguration ConfigureLifetime(
             this IFluentExportStrategyConfiguration configuration, ServiceLifetime lifetime)
         {
-            switch (lifetime)
+            return lifetime switch
             {
-                case ServiceLifetime.Scoped:
-                    return configuration.Lifestyle.SingletonPerScope();
-
-                case ServiceLifetime.Singleton:
-                    return configuration.Lifestyle.Singleton();
-            }
-
-            return configuration;
+                ServiceLifetime.Scoped => configuration.Lifestyle.SingletonPerScope(),
+                ServiceLifetime.Singleton => configuration.Lifestyle.Singleton(),
+                _ => configuration,
+            };
         }
 
         private static IFluentExportInstanceConfiguration<T> ConfigureLifetime<T>(
             this IFluentExportInstanceConfiguration<T> configuration, ServiceLifetime lifecycleKind)
         {
-            switch (lifecycleKind)
+            return lifecycleKind switch
             {
-                case ServiceLifetime.Scoped:
-                    return configuration.Lifestyle.SingletonPerScope();
-
-                case ServiceLifetime.Singleton:
-                    return configuration.Lifestyle.Singleton();
-            }
-
-            return configuration;
+                ServiceLifetime.Scoped => configuration.Lifestyle.SingletonPerScope(),
+                ServiceLifetime.Singleton => configuration.Lifestyle.Singleton(),
+                _ => configuration,
+            };
         }
 
         /// <summary>
         /// Service provider for Grace
         /// </summary>
-        private class GraceServiceProvider 
-            : IServiceProvider
+        private class GraceServiceProvider
+            : IKeyedServiceProvider
             , IDisposable
 #if NET6_0_OR_GREATER
             , IAsyncDisposable
@@ -119,6 +153,18 @@ namespace Grace.DependencyInjection.Extensions
             public object GetService(Type serviceType)
             {
                 return _injectionScope.LocateOrDefault(serviceType, null);
+            }
+
+            public object GetKeyedService(Type serviceType, object serviceKey)
+            {
+                return _injectionScope.TryLocate(serviceType, out var service, withKey: serviceKey)
+                    ? service
+                    : null;
+            }
+
+            public object GetRequiredKeyedService(Type serviceType, object serviceKey)
+            {
+                return _injectionScope.Locate(serviceType, withKey: serviceKey);
             }
 
             /// <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>
@@ -177,7 +223,12 @@ namespace Grace.DependencyInjection.Extensions
             , IAsyncDisposable
 #endif
         {
-            private readonly IExportLocatorScope _injectionScope;
+            private readonly GraceServiceProvider _serviceProvider;
+
+            /// <summary>
+            /// Service provider
+            /// </summary>
+            public IServiceProvider ServiceProvider => _serviceProvider;            
 
             /// <summary>
             /// Default constructor
@@ -185,34 +236,21 @@ namespace Grace.DependencyInjection.Extensions
             /// <param name="injectionScope"></param>
             public GraceServiceScope(IExportLocatorScope injectionScope)
             {
-                _injectionScope = injectionScope;
-
-                ServiceProvider = injectionScope;
+                // Need to wrap IServiceProvider to implement 
+                // MS extensions interface IKeyedServiceProvider 
+                _serviceProvider = new GraceServiceProvider(injectionScope);
             }
-
-            /// <summary>
-            /// Service provider
-            /// </summary>
-            public IServiceProvider ServiceProvider { get; }
 
             // This code added to correctly implement the disposable pattern.
-            public void Dispose()
-            {
-                _injectionScope.Dispose();
-            }
+            public void Dispose() => _serviceProvider.Dispose();
 
 #if NET6_0_OR_GREATER
             // This code added to correctly and asynchronously implement the disposable pattern.
-            public ValueTask DisposeAsync()
-            {
-                return _injectionScope.DisposeAsync();
-            }
+            public ValueTask DisposeAsync() => _serviceProvider.DisposeAsync();
 #endif
         }
 
-
-#if NET6_0_OR_GREATER
-        private class ServiceProviderIsServiceImpl : IServiceProviderIsService
+        private class ServiceProviderIsServiceImpl : IServiceProviderIsKeyedService
         {
             private readonly IExportLocatorScope _exportLocatorScope;
 
@@ -223,15 +261,17 @@ namespace Grace.DependencyInjection.Extensions
 
             public bool IsService(Type serviceType)
             {
-                if (serviceType.IsGenericTypeDefinition)
-                {
-                    return false;
-                }
+                return serviceType.IsGenericTypeDefinition
+                    ? false
+                    : _exportLocatorScope.CanLocate(serviceType);
+            }
 
-                return _exportLocatorScope.CanLocate(serviceType);
+            public bool IsKeyedService(Type serviceType, object serviceKey)
+            {
+                return serviceType.IsGenericTypeDefinition 
+                    ? false 
+                    : _exportLocatorScope.CanLocate(serviceType, key: serviceKey);
             }
         }
-#endif
     }
-
 }

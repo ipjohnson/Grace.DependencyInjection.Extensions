@@ -4,15 +4,12 @@ using System;
 
 namespace Grace.DependencyInjection.Extensions.Tests
 {
-#if NET6_0_OR_GREATER
     public class GraceContainerTests : DependencyInjectionSpecificationTests
     {
         protected override IServiceProvider CreateServiceProvider(IServiceCollection serviceCollection)
         {
-            DependencyInjectionContainer container = new DependencyInjectionContainer();
-
-            return  container.Populate(serviceCollection);
+            return new DependencyInjectionContainer()
+                .Populate(serviceCollection);
         }
     }
-#endif
 }
