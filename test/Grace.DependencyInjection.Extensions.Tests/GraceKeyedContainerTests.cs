@@ -8,9 +8,8 @@ namespace Grace.DependencyInjection.Extensions.Tests
     {
         protected override IServiceProvider CreateServiceProvider(IServiceCollection serviceCollection)
         {
-            DependencyInjectionContainer container = new DependencyInjectionContainer();
-
-            return container.Populate(serviceCollection);
+            return new DependencyInjectionContainer()
+                .Populate(serviceCollection);
         }
     }
 }

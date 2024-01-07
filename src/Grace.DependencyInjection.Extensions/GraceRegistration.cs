@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 #endif
 using Microsoft.Extensions.DependencyInjection;
+using Grace.DependencyInjection.Attributes;
 using Grace.DependencyInjection.Attributes.Interfaces;
 
 namespace Grace.DependencyInjection.Extensions
@@ -63,7 +64,11 @@ namespace Grace.DependencyInjection.Extensions
                     }
                     else if (descriptor.KeyedImplementationFactory != null)
                     {
-                        c.ExportFactory(descriptor.KeyedImplementationFactory)
+                        // Adds [ImportKey] on second parameter so that Grace DelegateWrapperStrategy will pass the imported key
+                        var factory = (IServiceProvider services, [ImportKey] object key) => 
+                            descriptor.KeyedImplementationFactory(services, key);
+
+                        c.ExportFactory(factory)
                             .AsKeyed(descriptor.ServiceType, key)
                             .ConfigureLifetime(descriptor.Lifetime);
                     }
